@@ -20,7 +20,7 @@ export default function Home() {
     title: "Mahir Musleh — Senior Solution Architect | Backend, Cloud & AI",
     description:
       "Mahir Musleh is a Senior Solution Architect with 12+ years building scalable backend systems, cloud infrastructure and AI/LLM platforms. Available for select projects and roles.",
-    canonical: "https://acnologiaslayer.github.io/",
+    canonical: "https://arcma.dev/",
     ogType: "website",
   });
 

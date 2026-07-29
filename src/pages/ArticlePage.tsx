@@ -23,7 +23,7 @@ export default function ArticlePage() {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const canonical = `https://acnologiaslayer.github.io/writing/${slug}`;
+  const canonical = `https://arcma.dev/writing/${slug}`;
   useSeo({
     title: article ? `${article.title} | Mahir Musleh` : "Article not found",
     description: article?.description || "",
@@ -38,9 +38,9 @@ export default function ArticlePage() {
           datePublished: article.date,
           dateModified: article.date,
           url: canonical,
-          image: "https://acnologiaslayer.github.io/og-image.png",
+          image: "https://arcma.dev/og-image.png",
           keywords: article.tags.join(", "),
-          author: { "@type": "Person", name: "Md. Mahir Musleh", url: "https://acnologiaslayer.github.io/" },
+          author: { "@type": "Person", name: "Md. Mahir Musleh", url: "https://arcma.dev/" },
           publisher: { "@type": "Person", name: "Md. Mahir Musleh" },
           mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
         }

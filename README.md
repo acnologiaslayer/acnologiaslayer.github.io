@@ -3,7 +3,7 @@
 Personal portfolio and writing site. React + Vite + TypeScript + Tailwind,
 deployed to GitHub Pages via GitHub Actions.
 
-Live: https://acnologiaslayer.github.io/
+Live: https://arcma.dev/
 
 ## Develop
 

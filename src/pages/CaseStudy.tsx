@@ -39,7 +39,7 @@ export default function CaseStudy() {
     { label: "Domain", value: project.category },
   ].filter((m) => m.value);
 
-  const canonical = `https://acnologiaslayer.github.io/work/${project.slug}`;
+  const canonical = `https://arcma.dev/work/${project.slug}`;
   const seoTitle = `${project.title} — Case Study | Mahir Musleh`;
   const seoDesc = project.summary;
   useSeo({
@@ -54,7 +54,7 @@ export default function CaseStudy() {
       headline: seoTitle,
       description: seoDesc,
       url: canonical,
-      image: "https://acnologiaslayer.github.io/og-image.png",
+      image: "https://arcma.dev/og-image.png",
       dateCreated: project.year,
       keywords: project.tags.join(", "),
       about: project.category,

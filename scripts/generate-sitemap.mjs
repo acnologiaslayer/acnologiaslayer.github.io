@@ -10,7 +10,7 @@ import { dirname, join } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
-const BASE = "https://acnologiaslayer.github.io";
+const BASE = "https://arcma.dev";
 
 function frontmatter(raw) {
   const m = /^---\s*\n([\s\S]*?)\n---/.exec(raw);

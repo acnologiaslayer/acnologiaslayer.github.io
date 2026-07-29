@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://acnologiaslayer.github.io/</loc>
+    <loc>https://arcma.dev/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/writing</loc>
+    <loc>https://arcma.dev/writing</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/work/ai-data-interpretation-platform</loc>
+    <loc>https://arcma.dev/work/ai-data-interpretation-platform</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/work/enterprise-platform-architecture</loc>
+    <loc>https://arcma.dev/work/enterprise-platform-architecture</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/work/system-integration-interoperability</loc>
+    <loc>https://arcma.dev/work/system-integration-interoperability</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/work/e-learning-backend-apis</loc>
+    <loc>https://arcma.dev/work/e-learning-backend-apis</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/writing/designing-apis-that-survive-scale</loc>
+    <loc>https://arcma.dev/writing/designing-apis-that-survive-scale</loc>
     <lastmod>2026-07-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/writing/what-llm-features-actually-need-in-production</loc>
+    <loc>https://arcma.dev/writing/what-llm-features-actually-need-in-production</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://acnologiaslayer.github.io/writing/the-architects-job-is-to-remove-decisions</loc>
+    <loc>https://arcma.dev/writing/the-architects-job-is-to-remove-decisions</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

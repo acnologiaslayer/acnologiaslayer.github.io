@@ -16,13 +16,13 @@ export default function Writing() {
     title: "Writing — Mahir Musleh | Notes on Architecture, Backend & AI",
     description:
       "Essays and notes from Mahir Musleh on software architecture, backend engineering, APIs, and building reliable AI systems.",
-    canonical: "https://acnologiaslayer.github.io/writing",
+    canonical: "https://arcma.dev/writing",
     ogType: "website",
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Blog",
       name: "Mahir Musleh — Writing",
-      url: "https://acnologiaslayer.github.io/writing",
+      url: "https://arcma.dev/writing",
       author: { "@type": "Person", name: "Md. Mahir Musleh" },
     },
   });

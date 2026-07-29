@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://acnologiaslayer.github.io/sitemap.xml
+Sitemap: https://arcma.dev/sitemap.xml

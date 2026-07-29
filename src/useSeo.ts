@@ -9,7 +9,7 @@ type SeoInput = {
   jsonLd?: Record<string, unknown>;
 };
 
-const OG_IMAGE_DEFAULT = "https://acnologiaslayer.github.io/og-image.png";
+const OG_IMAGE_DEFAULT = "https://arcma.dev/og-image.png";
 
 function setMeta(attr: "name" | "property", key: string, value: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
