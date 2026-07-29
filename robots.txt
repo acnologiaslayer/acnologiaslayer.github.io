@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://acnologiaslayer.github.io/sitemap.xml
