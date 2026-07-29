@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-feature-settings: "ss01", "cv01";
+    overflow-x: hidden;
+  }
+
+  /*
+   * Skip rendering work for off-screen sections. contain-intrinsic-size
+   * reserves space so the scrollbar stays stable and there is no layout jump.
+   */
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+  }
+  /* The hero is always on-screen at load; never virtualize it. */
+  section#top {
+    content-visibility: visible;
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-fg;
+  }
+
+  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    a, button, [data-cursor] {
+      cursor: none;
+    }
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-bg;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-elevated rounded-full border-2 border-solid border-bg;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-border;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-br from-fg via-fg to-muted bg-clip-text text-transparent;
+  }
+  .accent-gradient {
+    background-image: linear-gradient(120deg, #818CF8, #6366F1, #A855F7);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .glass {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.06];
+  }
+  /*
+   * Cheap ambient glow: a pre-blurred radial gradient instead of a CSS
+   * blur() filter. Filters on large elements blow past mobile GPU texture
+   * limits and cause blank/black repaint on scroll; gradients are free.
+   */
+  .glow {
+    background-image: radial-gradient(
+      closest-side,
+      var(--glow-color, rgba(99, 102, 241, 0.35)),
+      transparent 100%
+    );
+  }
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  }
+
+  /* Long-form article typography */
+  .prose {
+    @apply text-[1.05rem] leading-relaxed text-muted;
+  }
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+  .prose h2 {
+    @apply mt-12 mb-1 font-display text-2xl font-semibold tracking-tight text-fg;
+  }
+  .prose h3 {
+    @apply mt-8 font-display text-xl font-semibold text-fg;
+  }
+  .prose p {
+    @apply text-fg/80;
+  }
+  .prose a {
+    @apply text-accent-glow underline underline-offset-4 transition-colors hover:text-accent;
+  }
+  .prose strong {
+    @apply font-semibold text-fg;
+  }
+  .prose ul {
+    @apply list-none space-y-2 pl-0;
+  }
+  .prose ul li {
+    @apply relative pl-6 text-fg/80;
+  }
+  .prose ul li::before {
+    content: "";
+    @apply absolute left-1 top-[0.6em] h-1.5 w-1.5 rounded-full bg-accent/70;
+  }
+  .prose ol {
+    @apply list-decimal space-y-2 pl-5 text-fg/80 marker:text-muted;
+  }
+  .prose blockquote {
+    @apply border-l-2 border-accent/50 pl-5 italic text-muted;
+  }
+  .prose code {
+    @apply rounded-md border border-border bg-elevated px-1.5 py-0.5 font-mono text-[0.85em] text-accent-glow;
+  }
+  .prose pre {
+    @apply overflow-x-auto rounded-2xl border border-border bg-surface p-5 text-sm;
+  }
+  .prose pre code {
+    @apply border-0 bg-transparent p-0 text-fg/90;
+  }
+}
+
+/*
+ * On touch / coarse-pointer devices, drop backdrop-blur (very expensive to
+ * recomposite while scrolling). Keep the translucent background so the
+ * glass elements still read correctly.
+ */
+@media (hover: none), (pointer: coarse) {
+  .glass {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(15, 15, 18, 0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

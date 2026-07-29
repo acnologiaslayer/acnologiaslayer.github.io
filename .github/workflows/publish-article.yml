@@ -1,0 +1,54 @@
+name: Publish article
+
+# Generates a new article twice a week in Mahir Musleh's voice and commits it.
+# The commit to master triggers the Deploy workflow, which rebuilds and ships
+# the site (sitemap is regenerated automatically during the build).
+
+on:
+  schedule:
+    # 09:00 UTC every Tuesday and Friday
+    - cron: "0 9 * * 2,5"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print the article instead of committing"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      - name: Generate article
+        env:
+          # Add ONE of these as a repo secret (Settings -> Secrets -> Actions):
+          #   ANTHROPIC_API_KEY  or  OPENAI_API_KEY
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}
+        run: npm run generate-article
+
+      - name: Commit and push if a new article was written
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          if [ -n "$(git status --porcelain src/content/articles)" ]; then
+            git config user.name "Mahir Musleh"
+            git config user.email "arc.mahir@gmail.com"
+            git add src/content/articles
+            NEW_FILE=$(git diff --cached --name-only --diff-filter=A | head -1)
+            git commit -m "Publish article: ${NEW_FILE##*/}"
+            git push
+            echo "Published $NEW_FILE"
+          else
+            echo "No new article to publish."
+          fi
