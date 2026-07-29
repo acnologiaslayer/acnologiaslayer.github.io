@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mahir Musleh</title>
+    <script>
+      // GitHub Pages SPA redirect: preserve the deep-link path and hand it
+      // back to the client router via a query param that index.html decodes.
+      (function () {
+        var l = window.location;
+        var path = l.pathname.slice(1);
+        l.replace(
+          l.origin + "/?/" + path.replace(/&/g, "~and~") +
+            (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+            l.hash
+        );
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
