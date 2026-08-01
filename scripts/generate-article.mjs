@@ -164,7 +164,7 @@ async function callOpenAI(prompt, model) {
  */
 async function callGemini(prompt) {
   const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-  const model = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+  const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
   const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
     {
