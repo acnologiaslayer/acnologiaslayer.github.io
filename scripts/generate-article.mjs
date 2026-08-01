@@ -157,6 +157,41 @@ async function callOpenAI(prompt, model) {
   return data.choices[0].message.content;
 }
 
+/*
+ * Free, no-auth provider: Pollinations text API (anonymous OpenAI-compatible
+ * POST endpoint). No API key or account required. It can be rate-limited or
+ * temporarily unavailable, so the caller treats a failure here as "skip",
+ * not "fail". See https://github.com/pollinations/pollinations
+ */
+async function callPollinations(prompt) {
+  const res = await fetch("https://text.pollinations.ai/openai", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful writing assistant. Always reply with a single valid JSON object and nothing else.",
+        },
+        { role: "user", content: prompt },
+      ],
+      // Anonymous requests use the default model; no `model` field on purpose.
+      referrer: "arcma.dev",
+      json: true,
+    }),
+  });
+  if (!res.ok) throw new Error(`Pollinations ${res.status}: ${await res.text()}`);
+  const text = await res.text();
+  // The endpoint may return an OpenAI-shaped JSON or raw text; handle both.
+  try {
+    const data = JSON.parse(text);
+    if (data?.choices?.[0]?.message?.content) return data.choices[0].message.content;
+    return text;
+  } catch {
+    return text;
+  }
+}
+
 function extractJson(text) {
   // Tolerate accidental code fences or prose around the JSON.
   const fenced = /```(?:json)?\s*([\s\S]*?)```/.exec(text);
@@ -173,18 +208,6 @@ function sanitize(md) {
 }
 
 async function main() {
-  const provider = process.env.ANTHROPIC_API_KEY
-    ? "anthropic"
-    : process.env.OPENAI_API_KEY
-      ? "openai"
-      : null;
-  if (!provider) {
-    console.error(
-      "No API key found. Set ANTHROPIC_API_KEY or OPENAI_API_KEY in the environment."
-    );
-    process.exit(1);
-  }
-
   const toneGuide = await readFile(join(__dirname, "tone-guide.md"), "utf8");
   const topicsRaw = await readFile(join(__dirname, "topics.md"), "utf8");
   const existing = await existingArticles();
@@ -200,13 +223,48 @@ async function main() {
   }
 
   const prompt = buildPrompt(toneGuide, topic, existingTitles);
-  const raw =
-    provider === "anthropic"
-      ? await callAnthropic(prompt, process.env.MODEL)
-      : await callOpenAI(prompt, process.env.MODEL);
 
-  const article = extractJson(raw);
-  if (!article.title || !article.body) throw new Error("Model output missing title/body");
+  // Provider chain: prefer a configured key-based provider (best quality),
+  // otherwise fall back to the free, no-auth provider. The
+  // FREE_ONLY=1 env forces the free provider even if a key is present.
+  const providers = [];
+  if (!process.env.FREE_ONLY) {
+    if (process.env.ANTHROPIC_API_KEY)
+      providers.push(["Anthropic", () => callAnthropic(prompt, process.env.MODEL)]);
+    if (process.env.OPENAI_API_KEY)
+      providers.push(["OpenAI", () => callOpenAI(prompt, process.env.MODEL)]);
+  }
+  // Free, no-auth provider always available as a last resort.
+  providers.push(["Pollinations (free)", () => callPollinations(prompt)]);
+
+  let raw = null;
+  let article = null;
+  for (const [name, call] of providers) {
+    try {
+      console.log(`Trying provider: ${name}`);
+      raw = await call();
+      article = extractJson(raw);
+      if (article?.title && article?.body) {
+        console.log(`Generated with ${name}.`);
+        break;
+      }
+      console.warn(`${name} returned unusable output; trying next provider.`);
+      article = null;
+    } catch (e) {
+      console.warn(`${name} failed: ${e.message}`);
+      article = null;
+    }
+  }
+
+  if (!article) {
+    // No provider succeeded. Skip cleanly so the scheduled job stays green.
+    // To guarantee generation, add ANTHROPIC_API_KEY or OPENAI_API_KEY as a
+    // repo secret (see README).
+    console.log(
+      "No provider produced a valid article this run. Skipping without error."
+    );
+    return;
+  }
 
   const slug = slugify(article.title);
   if (existing.some((a) => a.slug === slug)) {

@@ -3,6 +3,13 @@ name: Publish article
 # Generates a new article twice a week in Mahir Musleh's voice and commits it.
 # The commit to master triggers the Deploy workflow, which rebuilds and ships
 # the site (sitemap is regenerated automatically during the build).
+#
+# AI provider: the generator tries a configured key-based provider first
+# (best quality) and falls back to a FREE, no-auth provider (Pollinations).
+# No secret is required for the workflow to run and stay green. If no provider
+# produces a valid article, the run skips cleanly instead of failing.
+# For consistently high-quality output, add ANTHROPIC_API_KEY or
+# OPENAI_API_KEY as a repo secret (Settings -> Secrets and variables -> Actions).
 
 on:
   schedule:
@@ -25,14 +32,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
 
       - name: Generate article
         env:
-          # Add ONE of these as a repo secret (Settings -> Secrets -> Actions):
-          #   ANTHROPIC_API_KEY  or  OPENAI_API_KEY
+          # Optional. If set, used first for best quality. If absent, the
+          # generator uses the free no-auth provider.
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}

@@ -47,21 +47,34 @@ Body in Markdown...
 UTC. It generates a new article in the site's voice and commits it, which
 triggers a redeploy.
 
-### One-time setup (required for automation)
+### AI provider (no key required)
+
+The generator uses a provider chain:
+
+1. **Anthropic** or **OpenAI**, if you set an API key (best quality).
+2. **Pollinations** (free, no auth) as an automatic fallback.
+
+If no provider returns a usable article, the run **skips cleanly** (stays
+green) instead of failing. So the automation works out of the box with no
+secret at all.
+
+To get consistently high-quality posts, add a key (optional):
 
 1. Get an API key from **Anthropic** (recommended) or **OpenAI**.
 2. In the GitHub repo: **Settings -> Secrets and variables -> Actions -> New
    repository secret**.
 3. Add `ANTHROPIC_API_KEY` (or `OPENAI_API_KEY`) with your key as the value.
 
-That's it. The generator auto-detects which provider to use.
+The generator auto-detects which provider to use. Set `FREE_ONLY=1` to force
+the free provider even when a key is present.
 
 ### Manual controls
 
 - Run now: **Actions -> Publish article -> Run workflow**.
 - Preview without committing: run the workflow with `dry_run = true`.
-- Locally: `ANTHROPIC_API_KEY=... npm run generate-article`
-  (add `DRY_RUN=1` to print instead of writing a file).
+- Locally: `npm run generate-article` (free provider), or
+  `ANTHROPIC_API_KEY=... npm run generate-article` (add `DRY_RUN=1` to print
+  instead of writing a file).
 
 ### Tuning
 
