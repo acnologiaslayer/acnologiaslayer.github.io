@@ -158,6 +158,35 @@ async function callOpenAI(prompt, model) {
 }
 
 /*
+ * Google Gemini provider. Uses a free API key from https://aistudio.google.com
+ * (real free tier, no credit card). Set GEMINI_API_KEY (or GOOGLE_API_KEY).
+ * Model defaults to gemini-2.0-flash; override with GEMINI_MODEL.
+ */
+async function callGemini(prompt) {
+  const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  const model = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.7,
+          responseMimeType: "application/json",
+        },
+      }),
+    }
+  );
+  if (!res.ok) throw new Error(`Gemini ${res.status}: ${await res.text()}`);
+  const data = await res.json();
+  const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("");
+  if (!text) throw new Error("Gemini returned no text");
+  return text;
+}
+
+/*
  * Free, no-auth provider: Pollinations text API (anonymous OpenAI-compatible
  * POST endpoint). No API key or account required. It can be rate-limited or
  * temporarily unavailable, so the caller treats a failure here as "skip",
@@ -234,6 +263,9 @@ async function main() {
     if (process.env.OPENAI_API_KEY)
       providers.push(["OpenAI", () => callOpenAI(prompt, process.env.MODEL)]);
   }
+  // Google Gemini: free tier, used whenever a key is present.
+  if (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY)
+    providers.push(["Gemini (free tier)", () => callGemini(prompt)]);
   // Free, no-auth provider always available as a last resort.
   providers.push(["Pollinations (free)", () => callPollinations(prompt)]);
 

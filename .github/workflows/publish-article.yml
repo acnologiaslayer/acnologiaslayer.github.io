@@ -39,9 +39,11 @@ jobs:
       - name: Generate article
         env:
           # Optional. If set, used first for best quality. If absent, the
-          # generator uses the free no-auth provider.
+          # generator uses Gemini (free tier) or the free no-auth provider.
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Free Google Gemini key from https://aistudio.google.com (recommended).
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}
         run: npm run generate-article
 
