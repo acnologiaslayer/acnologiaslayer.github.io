@@ -1,15 +1,16 @@
 name: Publish article
 
-# Generates a new article twice a week in Mahir Musleh's voice and commits it.
-# The commit to master triggers the Deploy workflow, which rebuilds and ships
-# the site (sitemap is regenerated automatically during the build).
+# Generates a new article twice a week in Mahir Musleh's voice, commits it,
+# then builds and deploys the site in the same job.
+#
+# Note: a commit pushed with the default GITHUB_TOKEN does NOT trigger other
+# workflows (GitHub's loop protection), so this job deploys directly instead
+# of relying on the separate Deploy workflow.
 #
 # AI provider: the generator tries a configured key-based provider first
-# (best quality) and falls back to a FREE, no-auth provider (Pollinations).
-# No secret is required for the workflow to run and stay green. If no provider
+# (Anthropic/OpenAI), then Gemini, then a free no-auth provider. If none
 # produces a valid article, the run skips cleanly instead of failing.
-# For consistently high-quality output, add ANTHROPIC_API_KEY or
-# OPENAI_API_KEY as a repo secret (Settings -> Secrets and variables -> Actions).
+# Add ANTHROPIC_API_KEY, OPENAI_API_KEY, or GEMINI_API_KEY as a repo secret.
 
 on:
   schedule:
@@ -24,10 +25,19 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  generate:
+  publish:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,17 +47,16 @@ jobs:
       - run: npm ci
 
       - name: Generate article
+        id: generate
         env:
-          # Optional. If set, used first for best quality. If absent, the
-          # generator uses Gemini (free tier) or the free no-auth provider.
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # Free Google Gemini key from https://aistudio.google.com (recommended).
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '' }}
         run: npm run generate-article
 
-      - name: Commit and push if a new article was written
+      - name: Commit new article
+        id: commit
         if: ${{ github.event.inputs.dry_run != 'true' }}
         run: |
           if [ -n "$(git status --porcelain src/content/articles)" ]; then
@@ -57,7 +66,27 @@ jobs:
             NEW_FILE=$(git diff --cached --name-only --diff-filter=A | head -1)
             git commit -m "Publish article: ${NEW_FILE##*/}"
             git push
+            echo "published=true" >> "$GITHUB_OUTPUT"
             echo "Published $NEW_FILE"
           else
+            echo "published=false" >> "$GITHUB_OUTPUT"
             echo "No new article to publish."
           fi
+
+      # Build and deploy in the same run (the commit above cannot trigger the
+      # separate Deploy workflow due to GITHUB_TOKEN loop protection).
+      - name: Build site
+        if: ${{ steps.commit.outputs.published == 'true' }}
+        run: npm run build
+      - name: Configure Pages
+        if: ${{ steps.commit.outputs.published == 'true' }}
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        if: ${{ steps.commit.outputs.published == 'true' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Deploy to Pages
+        id: deployment
+        if: ${{ steps.commit.outputs.published == 'true' }}
+        uses: actions/deploy-pages@v4
