@@ -146,7 +146,7 @@ async function callOpenAI(prompt, model) {
       authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: model || "gpt-4o",
+      model: model || "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       response_format: { type: "json_object" },
