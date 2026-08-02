@@ -16,9 +16,15 @@ const links = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isMac, setIsMac] = useState(true);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const onHome = pathname === "/";
+
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent));
+  }, []);
+  const openPalette = () => window.dispatchEvent(new Event("palette:open"));
 
   // Hash links must return home first when viewed from another route.
   const resolveHref = (href: string) =>
@@ -91,6 +97,22 @@ export default function Navbar() {
               </a>
             )
           )}
+          <button
+            type="button"
+            onClick={openPalette}
+            aria-label="Open command palette"
+            data-cursor=""
+            className="group ml-1 hidden items-center gap-2 rounded-full border border-border px-3 py-2 text-xs text-muted transition-colors hover:border-accent/40 hover:text-fg lg:flex"
+          >
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent/60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+            </span>
+            <span>Menu</span>
+            <kbd className="rounded border border-border bg-white/5 px-1.5 py-0.5 font-sans text-[10px] tracking-wide text-muted group-hover:text-fg">
+              {isMac ? "⌘" : "Ctrl"} K
+            </kbd>
+          </button>
           <a
             href={resolveHref("#contact")}
             onClick={(e) => onHashClick(e, "#contact")}
@@ -100,29 +122,39 @@ export default function Navbar() {
           </a>
         </div>
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-fg md:hidden"
-        >
-          <div className="flex flex-col gap-1.5">
-            <span
-              className={`h-0.5 w-5 bg-fg transition-transform duration-300 ${
-                open ? "translate-y-2 rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`h-0.5 w-5 bg-fg transition-opacity duration-200 ${
-                open ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`h-0.5 w-5 bg-fg transition-transform duration-300 ${
-                open ? "-translate-y-2 -rotate-45" : ""
-              }`}
-            />
-          </div>
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <button
+            type="button"
+            onClick={openPalette}
+            aria-label="Open command palette"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:text-fg"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+          </button>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-fg"
+          >
+            <div className="flex flex-col gap-1.5">
+              <span
+                className={`h-0.5 w-5 bg-fg transition-transform duration-300 ${
+                  open ? "translate-y-2 rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`h-0.5 w-5 bg-fg transition-opacity duration-200 ${
+                  open ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`h-0.5 w-5 bg-fg transition-transform duration-300 ${
+                  open ? "-translate-y-2 -rotate-45" : ""
+                }`}
+              />
+            </div>
+          </button>
+        </div>
       </nav>
 
       <AnimatePresence>
@@ -155,6 +187,14 @@ export default function Navbar() {
                 </a>
               )
             )}
+            <button
+              type="button"
+              onClick={() => { setOpen(false); window.dispatchEvent(new Event("arcade:open")); }}
+              className="mt-1 flex items-center gap-2 rounded-xl border-t border-border px-4 py-3 pt-4 text-sm text-accent-glow transition-colors hover:bg-white/5"
+            >
+              <span>✦</span> Play Uplink
+              <span className="ml-auto text-[11px] text-muted">hidden game</span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

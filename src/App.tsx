@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Cursor from "./components/Cursor";
 import ScrollProgress from "./components/ScrollProgress";
+import ArcadeLauncher from "./components/game/ArcadeLauncher";
+import PaletteLauncher from "./components/palette/PaletteLauncher";
 import Home from "./pages/Home";
 import CaseStudy from "./pages/CaseStudy";
 import Writing from "./pages/Writing";
@@ -15,6 +17,8 @@ export default function App() {
     <div className="relative min-h-screen bg-bg text-fg">
       <Cursor />
       <ScrollProgress />
+      <ArcadeLauncher />
+      <PaletteLauncher />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/work/:slug" element={<CaseStudy />} />

@@ -96,6 +96,13 @@ export default function Contact() {
         <footer className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-border pt-8 sm:flex-row">
           <p className="text-sm text-muted">
             © {new Date().getFullYear()} {profile.displayName}. Built with React & Framer Motion.
+            <button
+              type="button"
+              aria-label="Play"
+              title="?"
+              onClick={() => window.dispatchEvent(new Event("arcade:open"))}
+              className="ml-1 inline-block h-1.5 w-1.5 translate-y-[1px] rounded-full bg-muted/40 align-baseline transition-colors hover:bg-accent"
+            />
           </p>
           <div className="flex items-center gap-2">
             {profile.socials.map((s) => {
