@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { profile } from "../data";
 import Logo from "./Logo";
+import { scrollToId } from "../scrollTo";
 
 const links = [
   { label: "Work", href: "#work" },
@@ -16,12 +17,30 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const onHome = pathname === "/";
 
   // Hash links must return home first when viewed from another route.
   const resolveHref = (href: string) =>
     href.startsWith("#") ? (onHome ? href : `/${href}`) : href;
   const isRoute = (href: string) => href.startsWith("/");
+
+  // Handle in-page hash navigation ourselves for reliable scrolling with
+  // content-visibility sections (native anchor jumps mis-land on far sections).
+  const onHashClick = (e: React.MouseEvent, href: string) => {
+    const id = href.replace(/^#/, "");
+    setOpen(false);
+    if (onHome) {
+      e.preventDefault();
+      history.replaceState(null, "", `#${id}`);
+      scrollToId(id);
+    } else {
+      // On another route: navigate home, then scroll after render.
+      e.preventDefault();
+      navigate("/");
+      setTimeout(() => scrollToId(id), 400);
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -65,6 +84,7 @@ export default function Navbar() {
               <a
                 key={l.href}
                 href={resolveHref(l.href)}
+                onClick={(e) => onHashClick(e, l.href)}
                 className="relative rounded-full px-4 py-2 text-sm text-muted transition-colors duration-200 hover:text-fg"
               >
                 {l.label}
@@ -73,6 +93,7 @@ export default function Navbar() {
           )}
           <a
             href={resolveHref("#contact")}
+            onClick={(e) => onHashClick(e, "#contact")}
             className="ml-2 rounded-full bg-fg px-4 py-2 text-sm font-medium text-bg transition-transform duration-200 hover:scale-[1.03] active:scale-[0.97]"
           >
             Let's talk
@@ -127,7 +148,7 @@ export default function Navbar() {
                 <a
                   key={l.href}
                   href={resolveHref(l.href)}
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => onHashClick(e, l.href)}
                   className="rounded-xl px-4 py-3 text-sm text-muted transition-colors hover:bg-white/5 hover:text-fg"
                 >
                   {l.label}

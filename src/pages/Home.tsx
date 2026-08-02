@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSeo } from "../useSeo";
+import { scrollToId } from "../scrollTo";
 import Preloader from "../components/Preloader";
 import SocialRail from "../components/SocialRail";
 import Navbar from "../components/Navbar";
@@ -46,12 +47,8 @@ export default function Home() {
   useEffect(() => {
     if (!loaded) return;
     if (location.hash) {
-      const el = document.querySelector(location.hash);
-      if (el) {
-        requestAnimationFrame(() =>
-          el.scrollIntoView({ behavior: "smooth", block: "start" })
-        );
-      }
+      const id = location.hash.replace(/^#/, "");
+      requestAnimationFrame(() => scrollToId(id));
     }
   }, [loaded, location.hash]);
 
