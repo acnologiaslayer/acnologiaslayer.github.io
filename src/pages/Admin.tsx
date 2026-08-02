@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { marked } from "marked";
 import { useSeo } from "../useSeo";
 import Logo from "../components/Logo";
@@ -46,6 +46,7 @@ export default function Admin() {
   const [login, setLogin] = useState<string | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [searchParams] = useSearchParams();
 
   // On mount, if a token is stored, validate it silently.
   useEffect(() => {
@@ -88,6 +89,7 @@ export default function Admin() {
     <Dashboard
       token={token}
       login={login}
+      initialEditSlug={searchParams.get("edit")}
       onSignOut={() => {
         clearToken();
         setTok(null);
@@ -187,10 +189,12 @@ function AuthGate({
 function Dashboard({
   token,
   login,
+  initialEditSlug,
   onSignOut,
 }: {
   token: string;
   login: string | null;
+  initialEditSlug?: string | null;
   onSignOut: () => void;
 }) {
   const [view, setView] = useState<View>("list");
@@ -223,6 +227,17 @@ function Dashboard({
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Deep link: /admin?edit=<slug> opens that article's editor directly.
+  const [deepLinkHandled, setDeepLinkHandled] = useState(false);
+  useEffect(() => {
+    if (deepLinkHandled || loading || !initialEditSlug) return;
+    setDeepLinkHandled(true);
+    if (files.some((f) => f.slug === initialEditSlug)) {
+      startEdit(initialEditSlug);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, files, initialEditSlug, deepLinkHandled]);
 
   const flash = (msg: string) => {
     setBanner(msg);

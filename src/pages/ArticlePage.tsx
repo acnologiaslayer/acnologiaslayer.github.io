@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getArticle, articles } from "../content";
@@ -7,6 +7,33 @@ import { expoOut } from "../motion";
 import { Magnetic } from "../components/primitives";
 import { IconArrowUpRight } from "../components/icons";
 import Logo from "../components/Logo";
+
+// Non-secret hint set by the admin panel when signed in (see src/admin/github.ts).
+// The token itself lives in sessionStorage and is never read here.
+const ADMIN_ACTIVE_KEY = "admin_active";
+
+/* True when an admin session is active in this browser. Reactive to focus and
+   storage so the Edit control appears/disappears after signing in or out. */
+function useIsAdmin() {
+  const read = () => {
+    try {
+      return !!localStorage.getItem(ADMIN_ACTIVE_KEY);
+    } catch {
+      return false;
+    }
+  };
+  const [isAdmin, setIsAdmin] = useState(read);
+  useEffect(() => {
+    const update = () => setIsAdmin(read());
+    window.addEventListener("focus", update);
+    window.addEventListener("storage", update);
+    return () => {
+      window.removeEventListener("focus", update);
+      window.removeEventListener("storage", update);
+    };
+  }, []);
+  return isAdmin;
+}
 
 function formatDate(iso: string) {
   const d = new Date(iso + "T00:00:00");
@@ -18,6 +45,7 @@ export default function ArticlePage() {
   const article = getArticle(slug || "");
   const index = articles.findIndex((a) => a.slug === slug);
   const next = articles[(index + 1) % articles.length];
+  const isAdmin = useIsAdmin();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -76,6 +104,18 @@ export default function ArticlePage() {
             </svg>
             All writing
           </Link>
+          {isAdmin && (
+            <Link
+              to={`/admin?edit=${slug}`}
+              data-cursor=""
+              className="flex items-center gap-1.5 rounded-full border border-accent/40 px-3 py-1.5 text-sm text-accent-glow transition-colors hover:bg-accent/10"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Edit
+            </Link>
+          )}
         </nav>
       </header>
 

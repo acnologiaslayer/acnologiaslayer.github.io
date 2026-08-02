@@ -16,14 +16,29 @@ const API = "https://api.github.com";
 
 const TOKEN_KEY = "gh_admin_token";
 
+// Non-secret hint that an admin session is active in this browser. Used by the
+// public site to decide whether to show an "Edit" control. The actual token
+// stays in sessionStorage (per-tab) and is never written to localStorage.
+const ACTIVE_HINT_KEY = "admin_active";
+
 export function getToken(): string | null {
   return sessionStorage.getItem(TOKEN_KEY);
 }
 export function setToken(token: string) {
   sessionStorage.setItem(TOKEN_KEY, token);
+  try {
+    localStorage.setItem(ACTIVE_HINT_KEY, "1");
+  } catch {
+    /* ignore */
+  }
 }
 export function clearToken() {
   sessionStorage.removeItem(TOKEN_KEY);
+  try {
+    localStorage.removeItem(ACTIVE_HINT_KEY);
+  } catch {
+    /* ignore */
+  }
 }
 
 function headers(token: string) {
