@@ -8,6 +8,7 @@
     "sitemap": "node scripts/generate-sitemap.mjs",
     "prebuild": "node scripts/generate-sitemap.mjs",
     "build": "tsc -b && vite build",
+    "new-article": "node scripts/new-article.mjs",
     "generate-article": "node scripts/generate-article.mjs",
     "lint": "oxlint",
     "preview": "vite preview"

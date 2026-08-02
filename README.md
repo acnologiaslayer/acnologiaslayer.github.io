@@ -41,11 +41,40 @@ tags: Architecture, Backend
 Body in Markdown...
 ```
 
+## Writing your own articles
+
+You can add your own articles by hand any time. They live alongside the
+automated ones and render identically. Two ways:
+
+**A. Locally (recommended if you have the repo cloned):**
+
+```bash
+npm run new-article "My Article Title"
+# or with tags:
+npm run new-article "My Title" -- --tags "Architecture, Backend"
+```
+
+This creates `src/content/articles/<slug>.md` with today's date and a
+template. Edit the file, then commit and push. Done. To preview before
+publishing, run `npm run dev` and open `/writing`.
+
+**B. Directly on GitHub (no local setup):**
+
+1. Go to `src/content/articles/` in the repo on github.com.
+2. Click **Add file -> Create new file**.
+3. Name it `my-article-slug.md`.
+4. Paste the frontmatter block above, then write your Markdown below it.
+5. Commit. The site rebuilds and deploys automatically.
+
+The writing list, article page, SEO tags, and sitemap all pick up new files
+automatically on the next build. No code changes needed.
+
 ## Automated writing (twice a week)
 
 `.github/workflows/publish-article.yml` runs every Tuesday and Friday at 09:00
-UTC. It generates a new article in the site's voice and commits it, which
-triggers a redeploy.
+UTC. It generates a new article in the site's voice, commits it, then builds
+and deploys the site. Your hand-written articles and the automated ones coexist
+without any conflict.
 
 ### AI provider (free option available)
 

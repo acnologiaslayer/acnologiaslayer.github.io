@@ -31,6 +31,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://arcma.dev/writing/test-my-own-entry</loc>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://arcma.dev/writing/understanding-idempotency-in-distributed-systems</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://arcma.dev/writing/designing-apis-that-survive-scale</loc>
     <lastmod>2026-07-20</lastmod>
     <changefreq>monthly</changefreq>
