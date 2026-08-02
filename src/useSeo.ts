@@ -7,6 +7,7 @@ type SeoInput = {
   ogType?: "website" | "article";
   image?: string;
   jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
 };
 
 const OG_IMAGE_DEFAULT = "https://arcma.dev/og-image.png";
@@ -43,12 +44,20 @@ export function useSeo({
   ogType = "website",
   image = OG_IMAGE_DEFAULT,
   jsonLd,
+  noindex = false,
 }: SeoInput) {
   const jsonLdKey = jsonLd ? JSON.stringify(jsonLd) : "";
   useEffect(() => {
     document.title = title;
     setMeta("name", "description", description);
     setLink("canonical", canonical);
+    setMeta(
+      "name",
+      "robots",
+      noindex
+        ? "noindex, nofollow"
+        : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    );
 
     setMeta("property", "og:type", ogType);
     setMeta("property", "og:url", canonical);
