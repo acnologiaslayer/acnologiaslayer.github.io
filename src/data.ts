@@ -15,7 +15,7 @@ export const profile = {
 };
 
 export const stats = [
-  { value: "13+", label: "Years building" },
+  { value: "12+", label: "Years building" },
   { value: "12", label: "Companies & teams" },
   { value: "8", label: "Teams led" },
   { value: "20+", label: "Technologies" },
@@ -48,7 +48,7 @@ export const projects: Project[] = [
     slug: "ai-data-interpretation-platform",
     title: "AI Data-Interpretation Platform",
     category: "AI / Machine Learning",
-    year: "2024",
+    year: "2024–26",
     description:
       "Led a team designing and deploying advanced AI models for improved data interpretation, training and fine-tuning ML pipelines for accuracy and reliability at BoomersHub.",
     tags: ["Python", "LangChain", "LLMs", "Automation"],
@@ -56,7 +56,7 @@ export const projects: Project[] = [
     featured: true,
     client: "BoomersHub LLC",
     role: "Technical Lead",
-    timeline: "2024 – 2025",
+    timeline: "2024 – 2026",
     summary:
       "A production AI platform that turns messy operational data into reliable, interpretable insight, backed by trained and fine-tuned ML models and intelligent automation.",
     challenge:
@@ -183,27 +183,27 @@ export const experience: Experience[] = [
     ],
   },
   {
-    role: "Senior Software Architect",
-    company: "Selise Digital Platforms",
-    location: "Dhaka, Bangladesh",
-    period: "Apr 2025 – Dec 2025",
-    featured: true,
-    points: [
-      "Integrated multiple systems into seamless interoperability across cloud platforms.",
-      "Championed agile methodologies and enforced coding standards through regular reviews.",
-      "Optimised codebase and cloud resource usage, and documented architectural designs for knowledge transfer.",
-    ],
-  },
-  {
     role: "Technical Lead",
     company: "BoomersHub LLC",
     location: "Cary, North Carolina",
-    period: "Jul 2024 – Apr 2025",
+    period: "Jul 2024 – Jan 2026",
     featured: true,
     points: [
       "Led a team designing and implementing advanced AI models for improved data interpretation.",
       "Trained and fine-tuned machine learning models to increase accuracy and reliability.",
       "Streamlined operational workflows with intelligent automation scripts and researched the latest AI trends.",
+    ],
+  },
+  {
+    role: "Senior Software Architect",
+    company: "Selise Digital Platforms",
+    location: "Dhaka, Bangladesh",
+    period: "Apr 2025 – Dec 2025 (concurrent)",
+    featured: true,
+    points: [
+      "Integrated multiple systems into seamless interoperability across cloud platforms.",
+      "Championed agile methodologies and enforced coding standards through regular reviews.",
+      "Optimised codebase and cloud resource usage, and documented architectural designs for knowledge transfer.",
     ],
   },
   {
@@ -307,7 +307,7 @@ export const skillGroups: SkillGroup[] = [
     title: "Languages",
     icon: "code",
     items: [
-      "JavaScript", "TypeScript", "Python", "PHP", "Java", "C#", "C++",
+      "TypeScript", "JavaScript", "Python", "Java", "PHP", "C#", "C++",
       "Ruby", "SQL", "MATLAB", "VHDL", "Verilog HDL", "Embedded C",
     ],
   },
@@ -315,18 +315,26 @@ export const skillGroups: SkillGroup[] = [
     title: "Frameworks",
     icon: "layers",
     items: [
-      "NestJS", "Express.js", "Fastify", "Laravel", "Django", "FastAPI",
-      "Flask", "GraphQL", "LangChain", "LangGraph", "LangSmith", "React",
-      "Next.js", "Gatsby", "AngularJS",
+      "NestJS", "Spring Boot", "Express.js", "Fastify", "Laravel", "Django",
+      "FastAPI", "Flask", "GraphQL", "LangChain", "LangGraph", "LangSmith",
+      "React", "Next.js", "Gatsby", "AngularJS",
     ],
   },
   {
     title: "Databases",
     icon: "database",
     items: [
-      "MySQL", "MariaDB", "PostgreSQL", "MongoDB",
+      "PostgreSQL", "MySQL", "MariaDB", "MongoDB", "Google BigQuery",
       "Neo4j", "Amazon Neptune",
       "ChromaDB", "Weaviate",
+    ],
+  },
+  {
+    title: "Analytics & BI",
+    icon: "database",
+    items: [
+      "Looker Studio", "Tableau", "BigQuery reporting pipelines",
+      "Embedded analytics dashboards",
     ],
   },
   {
@@ -335,7 +343,7 @@ export const skillGroups: SkillGroup[] = [
     items: [
       "Docker", "Kubernetes", "Helm", "Istio", "Traefik",
       "Terraform", "Ansible", "GitHub Actions", "Nginx",
-      "AWS", "GCP", "DigitalOcean",
+      "AWS", "GCP", "Azure", "DigitalOcean",
     ],
   },
 ];
