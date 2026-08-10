@@ -88,6 +88,37 @@ owner. Its GPL obligations were instead brought fully up to standard, which is
 correct under every option below: even a future clean-room replacement must
 ship the current version compliantly until it is retired.
 
+## Sizing the Canvas options (measured 2026-08-10)
+
+Numbers, so option C is a costed decision rather than a guess.
+
+| Component | Size | Notes |
+|---|---|---|
+| Whole repository | 739 Python files, ~254,000 lines | all GPL-3.0 |
+| Execution engine (`execution.py`, `comfy_execution/`, `folder_paths.py`, `nodes.py`) | ~6,900 lines | the part a replacement must genuinely reimplement |
+| Model/inference layer (`comfy/`, `comfy_extras/`) | ~150,500 lines | model architectures, samplers, loaders |
+| Built-in node classes | ~65 in `nodes.py`, 60 registration points | the ecosystem-facing API surface |
+| Web frontend | `comfyui-frontend-package==1.48.7`, ~85 MB | **a prebuilt upstream wheel, not our code** |
+
+Two consequences worth weighing:
+
+1. **A clean-room replacement is more than the 6,900-line engine.** The engine
+   is the tractable part. The inference layer is where the real value sits, and
+   reimplementing it is a multi-month effort, not a sprint. A pragmatic version
+   of option C would keep a permissively licensed inference stack (e.g.
+   `diffusers`) and write only a new graph executor and UI.
+
+2. **The frontend is a separate exposure.** It ships as a prebuilt wheel that
+   declares **no licence metadata at all** and contains no licence file. We do
+   not own it, cannot relicense it, and shipping it under any terms without
+   clarifying its licence is its own risk. Any proprietary Canvas would need its
+   own UI regardless of what happens to the Python engine.
+
+Taken together: option A (keep GPL-3.0, monetise hosting) is by a wide margin
+the best value for effort. Option C only becomes attractive if a closed Canvas
+is strategically essential, and it should then be scoped as a new product
+rather than a fork.
+
 ## A distinction worth holding onto
 
 **"Private repository" and "proprietary licence" are different things.** All
