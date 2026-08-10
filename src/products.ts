@@ -26,6 +26,8 @@ export type Product = {
   stack: string[];
   platforms: string[];
   repo: string;
+  /** How this product itself is licensed to customers. */
+  licensing: "proprietary" | "gpl-3.0" | "open-source";
   /** Upstream project this builds on, when applicable. */
   builtOn?: { name: string; href: string; license: string };
 };
@@ -70,6 +72,7 @@ export const products: Product[] = [
     ],
     stack: ["Python 3.10+", "CLI"],
     platforms: ["macOS", "Linux", "Windows"],
+    licensing: "proprietary",
     repo: "https://github.com/acnologiaslayer/arccode",
   },
   {
@@ -104,6 +107,7 @@ export const products: Product[] = [
     ],
     stack: ["Rust", "Tauri 2", "React", "TypeScript"],
     platforms: ["macOS", "Windows", "Linux"],
+    licensing: "proprietary",
     repo: "https://github.com/acnologiaslayer/arcane-dictate",
     builtOn: {
       name: "Handy",
@@ -143,6 +147,7 @@ export const products: Product[] = [
     ],
     stack: ["Python", "PyTorch", "Web frontend"],
     platforms: ["Linux", "Windows", "macOS"],
+    licensing: "gpl-3.0",
     repo: "https://github.com/acnologiaslayer/arcane-canvas",
     builtOn: {
       name: "ComfyUI",
@@ -182,6 +187,7 @@ export const products: Product[] = [
     ],
     stack: ["Python 3.10+", "PyTorch"],
     platforms: ["Linux", "macOS", "Windows"],
+    licensing: "proprietary",
     repo: "https://github.com/acnologiaslayer/arcane-speech",
     builtOn: {
       name: "OmniVoice",
@@ -221,6 +227,7 @@ export const products: Product[] = [
     ],
     stack: ["Electron", "Vue 3", "Docker"],
     platforms: ["Windows", "Linux"],
+    licensing: "proprietary",
     repo: "https://github.com/acnologiaslayer/arcane-avatar",
     builtOn: {
       name: "HeyGem",

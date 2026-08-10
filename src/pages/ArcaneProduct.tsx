@@ -165,10 +165,15 @@ export default function ArcaneProduct() {
             </ul>
           </div>
           <div className="rounded-3xl border border-border bg-surface p-7">
-            <h3 className="font-mono text-xs uppercase tracking-widest text-muted">Open source</h3>
+            <h3 className="font-mono text-xs uppercase tracking-widest text-muted">Licensing</h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              {product.licensing === "gpl-3.0"
+                ? "Released under GPL-3.0. Source is available to everyone who receives a build."
+                : "Proprietary. Source is not distributed; licensed per agreement."}
+            </p>
             {product.builtOn ? (
               <p className="mt-3 text-sm leading-relaxed text-muted">
-                Builds on{" "}
+                Built on{" "}
                 <a
                   href={product.builtOn.href}
                   target="_blank"
@@ -177,14 +182,10 @@ export default function ArcaneProduct() {
                 >
                   {product.builtOn.name}
                 </a>
-                , released under {product.builtOn.license}. Modifications are published under the
-                same terms.
+                , used under {product.builtOn.license}, whose terms are carried in the product's
+                third-party notices.
               </p>
-            ) : (
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Original work, developed and maintained in the open.
-              </p>
-            )}
+            ) : null}
           </div>
         </div>
       </section>
