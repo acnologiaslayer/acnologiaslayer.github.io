@@ -74,6 +74,20 @@ ComfyUI is licensed GPL-3.0, a strong copyleft. Relevant consequences:
    permissively licensed project, would be genuinely yours. This is a real
    engineering project, not a rebranding exercise.
 
+## Current state (implemented 2026-08-10)
+
+| Product | Licence now | Verified how |
+|---|---|---|
+| Arcane Dictate | Proprietary | MIT notice preserved byte-identical in `THIRD-PARTY-NOTICES.md`, diffed against upstream's original |
+| Arcane Speech | Proprietary | Built wheel reports `LicenseRef-Proprietary` and ships all three licence files |
+| Arcane Avatar | Proprietary | Packaged `app.asar` ships the upstream agreement, NOTICE and model licence PDF |
+| Arcane Canvas | **GPL-3.0** | Compliance completed: §5(a) change notices, §5(d) startup notice, source offer in NOTICE and on `/system_stats` |
+
+Canvas has not been relicensed and will not be without a decision from the
+owner. Its GPL obligations were instead brought fully up to standard, which is
+correct under every option below: even a future clean-room replacement must
+ship the current version compliantly until it is retired.
+
 ## A distinction worth holding onto
 
 **"Private repository" and "proprietary licence" are different things.** All
