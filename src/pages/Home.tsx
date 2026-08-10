@@ -7,6 +7,7 @@ import SocialRail from "../components/SocialRail";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Work from "../components/Work";
+import ArcaneTeaser from "../components/ArcaneTeaser";
 import Services from "../components/Services";
 import About from "../components/About";
 import Experience from "../components/Experience";
@@ -60,6 +61,7 @@ export default function Home() {
       <main>
         <Hero />
         <Work />
+        <ArcaneTeaser />
         <Services />
         <About />
         <Experience />
