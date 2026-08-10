@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="48" viewBox="0 0 260 48" fill="none" role="img" aria-label="Arcane Canvas">
+  <defs>
+    <linearGradient id="arcane-canvas" x1="10" y1="12" x2="38" y2="36" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E9D5FF"/>
+      <stop offset="0.55" stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <rect x="1.25" y="1.25" width="45.5" height="45.5" rx="13" stroke="url(#arcane-canvas)" stroke-opacity="0.3" stroke-width="1.5"/>
+    <path d="M15 15 H33" stroke="url(#arcane-canvas)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M33 15 V33" stroke="url(#arcane-canvas)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M33 33 H15" stroke="url(#arcane-canvas)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M15 33 V15" stroke="url(#arcane-canvas)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M15 15 L33 33" stroke="url(#arcane-canvas)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <circle cx="15" cy="15" r="3.2" fill="url(#arcane-canvas)"/>
+    <circle cx="33" cy="15" r="3.2" fill="url(#arcane-canvas)"/>
+    <circle cx="15" cy="33" r="3.2" fill="url(#arcane-canvas)"/>
+    <circle cx="33" cy="33" r="3.6" fill="#E9D5FF"/>
+  </g>
+  <text x="62" y="30" font-family="Space Grotesk, Archivo, ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600" letter-spacing="-0.4" fill="#F4F4F6">Arcane<tspan dx="6" fill="#A855F7">Canvas</tspan></text>
+</svg>

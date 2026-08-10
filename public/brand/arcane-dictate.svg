@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" role="img" aria-label="Arcane Dictate emblem">
+  <defs>
+    <linearGradient id="arcane-dictate" x1="10" y1="12" x2="38" y2="36" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A5F3FC"/>
+      <stop offset="0.55" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <rect x="1.25" y="1.25" width="45.5" height="45.5" rx="13" stroke="url(#arcane-dictate)" stroke-opacity="0.3" stroke-width="1.5"/>
+    <path d="M14 21 V27" stroke="url(#arcane-dictate)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M19 16 V32" stroke="url(#arcane-dictate)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M24 12 V30" stroke="url(#arcane-dictate)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M29 17 V31" stroke="url(#arcane-dictate)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M34 21 V27" stroke="url(#arcane-dictate)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M17 37 H31" stroke="url(#arcane-dictate)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <circle cx="24" cy="34" r="2.2" fill="url(#arcane-dictate)"/>
+  </g>
+</svg>

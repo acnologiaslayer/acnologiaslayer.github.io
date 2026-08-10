@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" role="img" aria-label="Arcane Agents emblem">
+  <defs>
+    <linearGradient id="arcane-agents" x1="10" y1="12" x2="38" y2="36" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A5B4FC"/>
+      <stop offset="0.55" stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <rect x="1.25" y="1.25" width="45.5" height="45.5" rx="13" stroke="url(#arcane-agents)" stroke-opacity="0.3" stroke-width="1.5"/>
+    <path d="M13 24 H22" stroke="url(#arcane-agents)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M22 24 L34 14" stroke="url(#arcane-agents)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M22 24 H35" stroke="url(#arcane-agents)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <path d="M22 24 L34 34" stroke="url(#arcane-agents)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    <circle cx="12" cy="24" r="3.2" fill="url(#arcane-agents)"/>
+    <circle cx="34" cy="14" r="3.2" fill="url(#arcane-agents)"/>
+    <circle cx="36" cy="24" r="3.2" fill="url(#arcane-agents)"/>
+    <circle cx="34" cy="34" r="3.6" fill="#A5B4FC"/>
+  </g>
+</svg>

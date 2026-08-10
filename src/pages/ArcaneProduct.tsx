@@ -5,6 +5,7 @@ import { useSeo } from "../useSeo";
 import { fadeUp, staggerContainer, viewportOnce, expoOut } from "../motion";
 import { IconArrowUpRight } from "../components/icons";
 import ArcaneNav from "../components/ArcaneNav";
+import ProductLogo, { type ProductMark } from "../components/ProductLogo";
 
 export default function ArcaneProduct() {
   const { slug } = useParams();
@@ -48,6 +49,14 @@ export default function ArcaneProduct() {
           style={{ ["--glow-color" as string]: `${product.accent}38` }}
         />
         <div className="relative mx-auto max-w-container">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: expoOut }}
+            className="mb-6"
+          >
+            <ProductLogo mark={product.slug as ProductMark} size={72} withGlow animated />
+          </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

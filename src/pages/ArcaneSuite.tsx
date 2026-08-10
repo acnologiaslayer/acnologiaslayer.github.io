@@ -5,6 +5,7 @@ import { useSeo } from "../useSeo";
 import { fadeUp, staggerContainer, viewportOnce, expoOut } from "../motion";
 import { IconArrowUpRight } from "../components/icons";
 import ArcaneNav from "../components/ArcaneNav";
+import ProductLogo, { type ProductMark } from "../components/ProductLogo";
 
 export default function ArcaneSuite() {
   useSeo({
@@ -98,16 +99,19 @@ export default function ArcaneSuite() {
                 />
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span
-                        className="font-mono text-xs uppercase tracking-widest"
-                        style={{ color: p.accent }}
-                      >
-                        {p.category}
-                      </span>
-                      <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
-                        {p.name}
-                      </h2>
+                    <div className="flex items-start gap-4">
+                      <ProductLogo mark={p.slug as ProductMark} size={44} />
+                      <div>
+                        <span
+                          className="font-mono text-xs uppercase tracking-widest"
+                          style={{ color: p.accent }}
+                        >
+                          {p.category}
+                        </span>
+                        <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+                          {p.name}
+                        </h2>
+                      </div>
                     </div>
                     <span className="rounded-full border border-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-muted">
                       {p.status}

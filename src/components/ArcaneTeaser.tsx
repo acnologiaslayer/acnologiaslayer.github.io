@@ -4,6 +4,7 @@ import { products, suite } from "../products";
 import { fadeUp, staggerContainer, viewportOnce } from "../motion";
 import { IconArrowUpRight } from "./icons";
 import { AnimatedText } from "./primitives";
+import ProductLogo, { type ProductMark } from "./ProductLogo";
 
 /*
  * Home-page teaser for the Arcane Suite. Links through to /arcane rather than
@@ -51,6 +52,7 @@ export default function ArcaneTeaser() {
                   }}
                 />
                 <div className="relative z-10">
+                  <ProductLogo mark={p.slug as ProductMark} size={34} className="mb-3" />
                   <span
                     className="font-mono text-[10px] uppercase tracking-widest"
                     style={{ color: p.accent }}
