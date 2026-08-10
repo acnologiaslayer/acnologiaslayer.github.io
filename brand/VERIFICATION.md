@@ -168,6 +168,33 @@ only appears in a packaged build.
 
 The `dist/` output (1.6 GB) was deleted after verification.
 
+## R9. Arcane Dictate, deep validation
+
+Dictate was the least-verified product, so its rebrand-critical surfaces were
+exercised individually.
+
+| Check | Observed |
+|---|---|
+| 24 locale files parse as JSON | all valid |
+| Locale key sets vs English source | structurally identical, 0 missing/extra keys |
+| Locale strings naming the upstream product | **none** |
+| Locales carrying the new product name | 24/24 |
+| Migration module compiled and its 6 tests run (extracted to a standalone crate) | 6 passed |
+| Added test: realistic upstream install (real `default_settings.json`, a model blob, history) | passed: settings byte-identical, model and history preserved, marker written, legacy retained, idempotent on second run |
+| Portable-marker contract, 4 new tests | passed: an upstream-written marker is still recognised, whitespace tolerated, empty/foreign rejected, missing file does not panic |
+| macOS autostart | removes both the current and the legacy `Handy.plist`, so an upgraded machine will not launch the app twice at login |
+| Updater endpoint | points at `acnologiaslayer/arcane-dictate` releases |
+
+### Two concrete release blockers confirmed
+
+1. **The updater public key is still upstream's.** Decoded, it reads
+   `minisign public key: BAB72095206601F9`, which belongs to upstream Handy.
+   Updates signed with our own key would be rejected by shipped clients.
+2. **17 model downloads point at `blob.handy.computer`**, upstream's CDN. It
+   currently returns HTTP 200, but this is third-party infrastructure we do not
+   control and it can disappear without notice. Mirroring these to our own
+   storage is a prerequisite for treating Dictate as an independent product.
+
 ---
 
 ## Known gaps, stated honestly
