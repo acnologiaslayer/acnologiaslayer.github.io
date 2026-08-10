@@ -3,6 +3,22 @@
 Every explicit requirement mapped to the command that checked it and the result
 that was actually observed. Written against commit state of 2026-08-10.
 
+**Read the strength of each claim, not just the tick.** The evidence here is
+uneven by design of the environment, not by choice:
+
+* **Arcane Canvas** was verified on its real acceptance path — the server was
+  booted and a workflow was executed through the public HTTP API.
+* **Arcane Speech** was verified on its real packaging path — installed,
+  imported, console scripts run.
+* **Arcane Avatar's** migration was exercised against a real SQLite database,
+  but Electron's `app.getPath` was stubbed and **the app itself was never
+  launched**.
+* **Arcane Dictate's** web bundle was built and audited, but **the Rust crate
+  was never type-checked and the desktop app was never launched.**
+
+Neither desktop app has been packaged into an installer, so no end-user has
+ever actually run either one. That remains the largest untested surface.
+
 The environment needed to run these is reproducible: system libraries were
 installed rootless into `~/localdeps/root` (see `~/arcane-verify/rust-env.sh`),
 because this machine has no passwordless sudo.
@@ -114,6 +130,19 @@ Licence constraints found and reported rather than hidden:
 | browser screenshot of `/arcane` and `/arcane/{dictate,canvas}` | correct copy, marks, accents |
 | `curl https://arcma.dev/brand/arcane-dictate.svg` | served |
 | sitemap | 6 arcane URLs |
+
+## R7. CI integrity after the rebrand (static checks, no runs)
+
+| Check | Observed |
+|---|---|
+| YAML parse of every workflow in all four repos | 28 files, 0 failures |
+| `working-directory:` paths resolve (accounting for `actions/checkout` `path:`) | all resolve |
+| Scripts invoked by workflows exist on disk | all present in all four repos |
+| Dictate's `/usr/lib/arcane-dictate` three-way contract: `tauri.conf.json`, `build.rs` rpath, CI assertions | consistent; 0 stale `/usr/lib/Handy` references |
+| Stale renamed paths (`omnivoice/`, old icon names) referenced by CI | none |
+
+One real defect found and fixed: Canvas's `test-launch.yml` checked out into a
+directory named `ComfyUI`.
 
 ---
 
