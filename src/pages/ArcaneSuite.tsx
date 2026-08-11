@@ -9,8 +9,8 @@ import ProductLogo, { type ProductMark } from "../components/ProductLogo";
 
 export default function ArcaneSuite() {
   useSeo({
-    title: "Arcane Suite — Local-first generative AI tools by Mahir Musleh",
-    description: `${suite.tagline} ${products.map((p) => p.name).join(", ")}.`,
+    title: "Arcane Suite — Engineering case studies by Mahir Musleh",
+    description: `Case studies on adopting and rebuilding four generative-AI codebases as first-party products: ${products.map((p) => p.name).join(", ")}.`,
     canonical: "https://arcma.dev/arcane",
     ogType: "website",
     jsonLd: {
@@ -22,12 +22,12 @@ export default function ArcaneSuite() {
         "@type": "ListItem",
         position: i + 1,
         item: {
-          "@type": "SoftwareApplication",
+          "@type": "CreativeWork",
           name: p.name,
           description: p.tagline,
-          applicationCategory: p.category,
-          operatingSystem: p.platforms.join(", "),
+          about: p.category,
           url: `https://arcma.dev/arcane/${p.slug}`,
+          author: { "@type": "Person", name: "Md. Mahir Musleh" },
         },
       })),
     },
@@ -50,7 +50,7 @@ export default function ArcaneSuite() {
             transition={{ duration: 0.6, ease: expoOut }}
             className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent"
           >
-            <span className="h-px w-8 bg-accent" /> {products.length} products
+            <span className="h-px w-8 bg-accent" /> {products.length} case studies
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -87,7 +87,7 @@ export default function ArcaneSuite() {
             >
               <Link
                 to={`/arcane/${p.slug}`}
-                data-cursor="Open"
+                data-cursor="Read"
                 className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-border bg-surface p-7 transition-colors duration-300 hover:border-white/15"
               >
                 <div
@@ -131,7 +131,7 @@ export default function ArcaneSuite() {
                     ))}
                   </ul>
                   <span className="flex items-center gap-1.5 text-sm text-muted transition-colors group-hover:text-fg">
-                    Details <IconArrowUpRight />
+                    Read the case study <IconArrowUpRight />
                   </span>
                 </div>
               </Link>

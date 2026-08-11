@@ -1,14 +1,19 @@
 /*
- * Arcane Suite — product catalogue.
+ * Arcane Suite — engineering case studies.
  *
- * One entry per product. Drives /arcane (suite page) and /arcane/:slug
- * (individual product pages), plus the sitemap.
+ * One entry per project. Drives /arcane (index) and /arcane/:slug (the
+ * individual write-ups), plus the sitemap.
  *
- * Everything here must stay factual: features describe what the code in the
- * corresponding repository actually does today.
+ * These are presented as case studies, not as things for sale: what the
+ * problem was, what was actually built, and what it cost or constrained.
+ * Everything here must stay factual, including the limitations — an honest
+ * "what I would not claim" section is worth more than a feature list.
  */
 
 export type ProductFeature = { title: string; body: string };
+
+/** A concrete engineering decision and the reason behind it. */
+export type Decision = { title: string; body: string };
 
 export type Product = {
   slug: string;
@@ -18,11 +23,24 @@ export type Product = {
   category: string;
   status: "alpha" | "beta" | "stable";
   accent: string;
-  /** One-paragraph positioning used on the suite grid. */
+  /** One-paragraph summary used on the index grid. */
   blurb: string;
-  /** Longer intro used at the top of the product page. */
+  /** Longer framing used at the top of the case study. */
   intro: string;
+  /** The problem this work set out to solve. */
+  challenge: string;
+  /** What was actually built, in engineering terms. */
   features: ProductFeature[];
+  /** Decisions worth defending, and the trade-off each one made. */
+  decisions: Decision[];
+  /** Verified results, phrased as observations rather than promises. */
+  outcomes: string[];
+  /** Honest limits: what this does not do, or has not been proven to do. */
+  limitations: string[];
+  /** My role on this piece of work. */
+  role: string;
+  /** Rough period the work covers. */
+  timeline: string;
   stack: string[];
   platforms: string[];
   repo: string;
@@ -34,9 +52,9 @@ export type Product = {
 
 export const suite = {
   name: "Arcane Suite",
-  tagline: "A local-first toolkit for building with generative AI.",
+  tagline: "Taking four open-source AI engines and making them mine.",
   intro:
-    "Arcane is a suite of tools for people who want to generate, transcribe and compose with AI on their own hardware. Each product stands on its own, runs on your machine, and shares a common design language.",
+    "Four mature generative-AI codebases, adopted and rebuilt as first-party products: identity, licensing, packaging and release engineering. The interesting work was not the rename. It was the migrations that stop existing users losing their data, the compatibility contracts that had to survive it, and reading four licences carefully enough to know which of these could legally become proprietary and which could not.",
 };
 
 export const products: Product[] = [
@@ -69,6 +87,32 @@ export const products: Product[] = [
         title: "Provider agnostic",
         body: "Bring your own keys. Swap providers without rewriting your workflows.",
       },
+    ],
+    role: "Sole author",
+    timeline: "2026",
+    challenge:
+      "Every model provider is a moving target: pricing changes, capabilities differ, and a harness pinned to one of them ages badly. I wanted a terminal workflow where the routing decision was explicit and reversible rather than baked into the tool.",
+    decisions: [
+      {
+        title: "Route on task shape, not on a hardcoded default",
+        body: "Each task is scored on complexity, cost, performance and intent, so swapping providers is a configuration change rather than a rewrite. The cost is a scoring layer to maintain; the benefit is that provider churn stops being a migration.",
+      },
+      {
+        title: "Delegate long work to sub-agents",
+        body: "Branching work runs in its own context and reports back, which keeps the parent context clean on tasks that would otherwise exhaust it.",
+      },
+      {
+        title: "Skills as files",
+        body: "Capabilities live on disk rather than in code, so they can be imported from other ecosystems or written at runtime without a release.",
+      },
+    ],
+    outcomes: [
+      "Provider durability became the design centre: a bug in one provider's token handling was caught by the harness rather than by a user.",
+      "Runs against multiple providers from one interface, with per-task routing rather than a global model setting.",
+    ],
+    limitations: [
+      "Routing quality depends on the scoring heuristics, which are tuned by hand rather than learned.",
+      "Original work, so there is no upstream to inherit fixes from.",
     ],
     stack: ["Python 3.10+", "CLI"],
     platforms: ["macOS", "Linux", "Windows"],
@@ -104,6 +148,34 @@ export const products: Product[] = [
         title: "Small footprint",
         body: "A native Tauri shell keeps memory use and install size far below an Electron equivalent.",
       },
+    ],
+    role: "Sole author of the fork",
+    timeline: "2026",
+    challenge:
+      "Adopting a mature desktop app means inheriting its users. The rebrand changed the bundle identifier, and on Tauri every data path derives from that identifier — so a careless rename would silently orphan every existing install's settings, downloaded models and transcription history.",
+    decisions: [
+      {
+        title: "Copy the old data directory, never move it",
+        body: "First launch after the upgrade copies the legacy directory across, refuses to overwrite a populated one, and writes a marker so a multi-gigabyte copy is attempted only once. The legacy directory is left in place, so downgrading still works.",
+      },
+      {
+        title: "Rename what users see, not what the ecosystem depends on",
+        body: "The third-party keyboard crate and the upstream model CDN keep their names. Renaming them would have looked tidier and broken model downloads.",
+      },
+      {
+        title: "Treat the library path as a three-way contract",
+        body: "The install path appears in the bundler config, in the linker rpath, and in eight CI assertions. All three were changed together, and a built package was inspected to confirm the binary's RUNPATH matches where the libraries actually land.",
+      },
+    ],
+    outcomes: [
+      "206 crate tests pass, including a migration test that carries real settings, a model blob and transcription history through an upgrade.",
+      "A built .deb installs 18 shared libraries into the renamed directory, and the running binary loads them from there.",
+      "All 24 translations were verified structurally identical to the English source, with no upstream product name left in any of them.",
+    ],
+    limitations: [
+      "The GUI window itself has not been observed running; only the command-line surface of the same binary.",
+      "The updater still carries upstream's signing key, so no release can be signed until a new keypair is generated.",
+      "Speech models are still downloaded from infrastructure I do not control.",
     ],
     stack: ["Rust", "Tauri 2", "React", "TypeScript"],
     platforms: ["macOS", "Windows", "Linux"],
@@ -145,6 +217,33 @@ export const products: Product[] = [
         body: "Custom nodes are Python classes, and the existing ComfyUI node ecosystem is compatible.",
       },
     ],
+    role: "Sole author of the fork",
+    timeline: "2026",
+    challenge:
+      "This engine's value is its ecosystem: thousands of third-party nodes import its internal modules by name. Rebranding it without breaking that compatibility meant deciding, precisely, which surfaces were mine to change and which were load-bearing.",
+    decisions: [
+      {
+        title: "Change the shell, never the import paths",
+        body: "Module names, API routes, node names and the model directory layout are untouched by design. A diff against the upstream base commit shows the only Python change is argument help text.",
+      },
+      {
+        title: "Rewrite upstream branding in the response, not the asset",
+        body: "The web frontend ships as a prebuilt upstream package, so its title and loading screen are rewritten as the page is served. It is a workaround, and it is documented as one.",
+      },
+      {
+        title: "Meet the copyleft obligations properly",
+        body: "Modified files carry change notices, startup states the licence and warranty position, and recipients are told how to obtain the source. Compliance was treated as engineering work rather than paperwork.",
+      },
+    ],
+    outcomes: [
+      "A workflow submitted over the HTTP API executed successfully with a third-party custom node loaded alongside 833 built-in nodes.",
+      "The compatibility claim was tested rather than asserted: a probe node importing the engine's internal modules loaded and ran.",
+    ],
+    limitations: [
+      "This one cannot be made proprietary. Its copyleft licence permits hosting a service, but not closed-source distribution, and only the original copyright holders could change that.",
+      "Verified on CPU with no model weights, so graph execution is proven and image generation is not.",
+      "The frontend package still carries the upstream logo, because it is not built from source here.",
+    ],
     stack: ["Python", "PyTorch", "Web frontend"],
     platforms: ["Linux", "Windows", "macOS"],
     licensing: "gpl-3.0",
@@ -185,6 +284,32 @@ export const products: Product[] = [
         body: "Inference is local, so scripts and reference voices stay private.",
       },
     ],
+    role: "Sole author of the fork",
+    timeline: "2026",
+    challenge:
+      "A research codebase carries two kinds of name: the ones that are branding, and the ones that are load-bearing identifiers for published model weights. Renaming the second kind silently breaks every model download.",
+    decisions: [
+      {
+        title: "Rename the distribution, preserve the model identifiers",
+        body: "The package, module and console scripts became ours. The upstream model repository ids and the internal model type string were left exactly as published, so checkpoints still resolve.",
+      },
+      {
+        title: "No compatibility shim for the old module name",
+        body: "The previous import now fails cleanly rather than resolving to something half-renamed. A silent shim would have hidden breakage until it mattered.",
+      },
+      {
+        title: "Keep the research lineage visible",
+        body: "The upstream paper, citation and benchmark numbers are credited to their authors rather than absorbed. Nothing was restated as our own result.",
+      },
+    ],
+    outcomes: [
+      "Installs and imports under the new name with correct authorship metadata, and all four console scripts run.",
+      "The built wheel declares the new licence and ships the upstream licence and notice alongside it.",
+    ],
+    limitations: [
+      "Speech was never actually generated here: that needs a multi-gigabyte checkpoint and a GPU.",
+      "Anyone with the old import will break, deliberately and visibly.",
+    ],
     stack: ["Python 3.10+", "PyTorch"],
     platforms: ["Linux", "macOS", "Windows"],
     licensing: "proprietary",
@@ -224,6 +349,33 @@ export const products: Product[] = [
         title: "Desktop workflow",
         body: "A native app handles projects, assets and rendering queues.",
       },
+    ],
+    role: "Sole author of the fork",
+    timeline: "2026",
+    challenge:
+      "A desktop app whose real work happens in containers, with the user's entire library — enrolled faces, cloned voices, rendered videos — in a local database keyed to the application name. Renaming the app moves that database.",
+    decisions: [
+      {
+        title: "Migrate the library before opening it",
+        body: "The migration runs before the database is initialised, handles three historical directory names, and refuses to overwrite newer data. Tested by seeding a real legacy database and launching the packaged app.",
+      },
+      {
+        title: "Leave the container contracts alone",
+        body: "Service names were rebranded, but image references and the bind-mounted data directory were not: they are contracts with infrastructure I do not control, and renaming either breaks generation on every existing install.",
+      },
+      {
+        title: "Read the licence before planning the business",
+        body: "The upstream licence terminates your rights above one thousand monthly active users unless a separate agreement is granted. That is a commercial ceiling, so it is stated at the top of the licence file rather than buried.",
+      },
+    ],
+    outcomes: [
+      "A seeded legacy install was migrated by the running packaged application, with the original records readable under the new name and the old directory retained.",
+      "Building and launching the package caught a first-run crash and a launcher entry showing an unexpanded template variable — neither visible in the source.",
+    ],
+    limitations: [
+      "The monthly-active-user ceiling makes a consumer product impractical without a negotiated licence.",
+      "Only a Linux build exists, and the interface has not been driven interactively.",
+      "Generation depends on container images published by the upstream vendor.",
     ],
     stack: ["Electron", "Vue 3", "Docker"],
     platforms: ["Windows", "Linux"],

@@ -24,7 +24,7 @@ export default function ArcaneTeaser() {
             variants={fadeUp}
             className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent"
           >
-            <span className="h-px w-8 bg-accent" /> Products
+            <span className="h-px w-8 bg-accent" /> Case studies
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -41,7 +41,7 @@ export default function ArcaneTeaser() {
               <Link
                 key={p.slug}
                 to={`/arcane/${p.slug}`}
-                data-cursor="Open"
+                data-cursor="Read"
                 className="group relative overflow-hidden rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-white/15"
               >
                 <div
@@ -69,10 +69,10 @@ export default function ArcaneTeaser() {
           <motion.div variants={fadeUp} className="mt-8">
             <Link
               to="/arcane"
-              data-cursor="Open"
+              data-cursor="Read"
               className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm text-muted transition-colors hover:border-white/15 hover:text-fg"
             >
-              Explore the suite <IconArrowUpRight />
+              Read the case studies <IconArrowUpRight />
             </Link>
           </motion.div>
         </motion.div>

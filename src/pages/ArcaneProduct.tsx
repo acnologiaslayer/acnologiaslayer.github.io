@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { productBySlug, products } from "../products";
 import { useSeo } from "../useSeo";
 import { fadeUp, staggerContainer, viewportOnce, expoOut } from "../motion";
-import { IconArrowUpRight } from "../components/icons";
+import { IconArrowUpRight, IconCheck } from "../components/icons";
 import ArcaneNav from "../components/ArcaneNav";
 import ProductLogo, { type ProductMark } from "../components/ProductLogo";
 
@@ -13,7 +13,7 @@ export default function ArcaneProduct() {
 
   useSeo({
     title: product
-      ? `${product.name} — ${product.tagline} | Arcane Suite`
+      ? `${product.name} — Case Study | Arcane Suite`
       : "Not found — Arcane Suite",
     description: product ? product.blurb : "This product does not exist.",
     canonical: `https://arcma.dev/arcane/${slug ?? ""}`,
@@ -22,14 +22,17 @@ export default function ArcaneProduct() {
     jsonLd: product
       ? {
           "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
+          // These pages are engineering write-ups, not storefronts, so they
+          // describe a CreativeWork rather than a purchasable application.
+          "@type": "CreativeWork",
           name: product.name,
+          headline: `${product.name} — Case Study`,
           description: product.blurb,
-          applicationCategory: product.category,
-          operatingSystem: product.platforms.join(", "),
+          about: product.category,
+          keywords: product.stack.join(", "),
           url: `https://arcma.dev/arcane/${product.slug}`,
           author: { "@type": "Person", name: "Md. Mahir Musleh" },
-          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          creator: { "@type": "Person", name: "Md. Mahir Musleh" },
         }
       : undefined,
   });
@@ -106,38 +109,174 @@ export default function ArcaneProduct() {
               className="flex items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-medium text-bg transition-transform hover:-translate-y-0.5"
               style={{ background: product.accent }}
             >
-              View source <IconArrowUpRight />
+              View the code <IconArrowUpRight />
             </a>
             <Link
               to="/arcane"
               data-cursor=""
               className="rounded-full border border-border px-5 py-2.5 text-sm text-muted transition-colors hover:border-white/15 hover:text-fg"
             >
-              All products
+              All case studies
             </Link>
           </motion.div>
+
+          {/* Engagement meta, matching the other case studies on the site. */}
+          <motion.dl
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: expoOut, delay: 0.28 }}
+            className="mt-12 grid max-w-2xl grid-cols-2 gap-6 border-t border-border pt-8 sm:grid-cols-4"
+          >
+            {[
+              { label: "Role", value: product.role },
+              { label: "Timeline", value: product.timeline },
+              { label: "Domain", value: product.category },
+              {
+                label: "Builds on",
+                value: product.builtOn ? product.builtOn.name : "Original work",
+              },
+            ].map((m) => (
+              <div key={m.label}>
+                <dt className="font-mono text-[10px] uppercase tracking-widest text-muted">
+                  {m.label}
+                </dt>
+                <dd className="mt-1.5 text-sm">{m.value}</dd>
+              </div>
+            ))}
+          </motion.dl>
         </div>
       </section>
 
-      {/* Features */}
+      {/* The challenge */}
+      <section className="px-6 pb-16">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+          className="mx-auto max-w-container"
+        >
+          <motion.h2 variants={fadeUp} className="font-display text-2xl font-semibold">
+            The problem
+          </motion.h2>
+          <motion.p
+            variants={fadeUp}
+            className="mt-4 max-w-3xl leading-relaxed text-muted"
+          >
+            {product.challenge}
+          </motion.p>
+        </motion.div>
+      </section>
+
+      {/* What was built */}
+      <section className="px-6 pb-16">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+          className="mx-auto max-w-container"
+        >
+          <motion.h2 variants={fadeUp} className="mb-6 font-display text-2xl font-semibold">
+            What it does
+          </motion.h2>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {product.features.map((f) => (
+              <motion.article
+                key={f.title}
+                variants={fadeUp}
+                className="rounded-3xl border border-border bg-surface p-7"
+              >
+                <h3 className="text-lg font-semibold tracking-tight">{f.title}</h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-muted">{f.body}</p>
+              </motion.article>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Decisions and trade-offs */}
+      <section className="px-6 pb-16">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+          className="mx-auto max-w-container"
+        >
+          <motion.h2 variants={fadeUp} className="font-display text-2xl font-semibold">
+            Decisions worth defending
+          </motion.h2>
+          <motion.p variants={fadeUp} className="mt-3 max-w-2xl text-sm text-muted">
+            Every one of these traded something away. The reasoning matters more than the
+            outcome.
+          </motion.p>
+          <ol className="mt-8 space-y-6">
+            {product.decisions.map((d, i) => (
+              <motion.li
+                key={d.title}
+                variants={fadeUp}
+                className="flex gap-5 border-l-2 pl-6"
+                style={{ borderColor: `${product.accent}55` }}
+              >
+                <span
+                  className="mt-0.5 font-mono text-xs tabular-nums"
+                  style={{ color: product.accent }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="font-semibold tracking-tight">{d.title}</h3>
+                  <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted">
+                    {d.body}
+                  </p>
+                </div>
+              </motion.li>
+            ))}
+          </ol>
+        </motion.div>
+      </section>
+
+      {/* Outcomes and honest limits, side by side */}
       <section className="px-6 pb-20">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
           viewport={viewportOnce}
-          className="mx-auto grid max-w-container gap-5 sm:grid-cols-2"
+          className="mx-auto grid max-w-container gap-5 lg:grid-cols-2"
         >
-          {product.features.map((f) => (
-            <motion.article
-              key={f.title}
-              variants={fadeUp}
-              className="rounded-3xl border border-border bg-surface p-7"
-            >
-              <h2 className="text-lg font-semibold tracking-tight">{f.title}</h2>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted">{f.body}</p>
-            </motion.article>
-          ))}
+          <motion.div
+            variants={fadeUp}
+            className="rounded-3xl border border-border bg-surface p-7"
+          >
+            <h2 className="font-display text-xl font-semibold">What was verified</h2>
+            <ul className="mt-5 space-y-3.5">
+              {product.outcomes.map((o) => (
+                <li key={o} className="flex gap-3 text-sm leading-relaxed text-muted">
+                  <span className="mt-1.5 shrink-0" style={{ color: product.accent }}>
+                    <IconCheck />
+                  </span>
+                  {o}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            className="rounded-3xl border border-border bg-surface p-7"
+          >
+            <h2 className="font-display text-xl font-semibold">What I would not claim</h2>
+            <ul className="mt-5 space-y-3.5">
+              {product.limitations.map((l) => (
+                <li key={l} className="flex gap-3 text-sm leading-relaxed text-muted">
+                  <span className="mt-2 h-px w-3 shrink-0 bg-muted" aria-hidden />
+                  {l}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </motion.div>
       </section>
 
@@ -193,7 +332,7 @@ export default function ArcaneProduct() {
       {/* Rest of the suite */}
       <section className="px-6 pb-28">
         <div className="mx-auto max-w-container">
-          <h2 className="mb-6 text-2xl font-bold tracking-tight">Rest of the suite</h2>
+          <h2 className="mb-6 text-2xl font-bold tracking-tight">Other case studies</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {others.map((p) => (
               <Link

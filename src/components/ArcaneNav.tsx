@@ -19,7 +19,7 @@ export default function ArcaneNav({ current }: { current?: string }) {
         </Link>
         <div className="flex items-center gap-5 text-sm text-muted">
           <Link to="/arcane" data-cursor="" className="transition-colors hover:text-fg">
-            Products
+            Case studies
           </Link>
           <Link to="/" data-cursor="" className="transition-colors hover:text-fg">
             Mahir Musleh
