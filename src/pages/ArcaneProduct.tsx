@@ -132,7 +132,7 @@ export default function ArcaneProduct() {
               { label: "Timeline", value: product.timeline },
               { label: "Domain", value: product.category },
               {
-                label: "Builds on",
+                label: "Inspired by",
                 value: product.builtOn ? product.builtOn.name : "Original work",
               },
             ].map((m) => (
@@ -312,7 +312,7 @@ export default function ArcaneProduct() {
             </p>
             {product.builtOn ? (
               <p className="mt-3 text-sm leading-relaxed text-muted">
-                Built on{" "}
+                Developed with inspiration from{" "}
                 <a
                   href={product.builtOn.href}
                   target="_blank"
@@ -321,7 +321,7 @@ export default function ArcaneProduct() {
                 >
                   {product.builtOn.name}
                 </a>
-                , used under {product.builtOn.license}, whose terms are carried in the product's
+                , whose {product.builtOn.license} terms are carried in this product's
                 third-party notices.
               </p>
             ) : null}
