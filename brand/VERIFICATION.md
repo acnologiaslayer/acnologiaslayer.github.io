@@ -3,24 +3,24 @@
 Every explicit requirement mapped to the command that checked it and the result
 that was actually observed. Written against commit state of 2026-08-10.
 
-**Read the strength of each claim, not just the tick.** The evidence here is
-uneven by design of the environment, not by choice:
+**Read the strength of each claim, not just the tick.** Where each product
+stands, as of the latest round:
 
-* **Arcane Canvas** was verified on its real acceptance path — the server was
-  booted and a workflow was executed through the public HTTP API.
-* **Arcane Speech** was verified on its real packaging path — installed,
-  imported, console scripts run.
-* **Arcane Avatar's** migration was exercised against a real SQLite database,
-  but Electron's `app.getPath` was stubbed and **the app itself was never
-  launched**.
-* **Arcane Dictate's** web bundle was built and audited, but **the Rust crate
-  was never type-checked and the desktop app was never launched.**
+* **Arcane Canvas** — server booted, a workflow executed through the public
+  HTTP API, and the full UI loaded in a browser. Runs CPU-only with no model
+  weights, so graph execution is proven but image generation is not.
+* **Arcane Dictate** — crate compiles (`cargo check` exits 0), 206 crate tests
+  pass, the `.deb` builds, and the binary runs and loads its native backends
+  from the renamed library directory. The GUI window itself has never been
+  observed, and no release can be signed (see gap 1).
+* **Arcane Avatar** — packaged **and launched**, which caught a crash on first
+  run. A real legacy database was migrated by the running app. The GUI has not
+  been driven interactively.
+* **Arcane Speech** — wheel built, package installed, all console scripts run.
+  Generation itself was never run: it needs a multi-gigabyte checkpoint and a
+  GPU, neither available here.
 
-Avatar has since been packaged **and launched**, which caught a crash on first
-run (see R10). Arcane Dictate has since been **compiled, packaged and run** as
-well (see R12): 206 crate tests pass, the `.deb` builds, and the binary loads
-its native backends from the renamed library directory. No end user has driven
-either GUI interactively, and no release has been signed.
+No release has been published, and nothing has been installed by an end user.
 
 The environment needed to run these is reproducible: system libraries were
 installed rootless into `~/localdeps/root` (see `~/arcane-verify/rust-env.sh`),
@@ -333,26 +333,22 @@ prerequisite for shipping, and it is the owner's decision to make.
 
 ## Known gaps, stated honestly
 
-1. **Dictate's updater public key is still upstream's.** Signed updates will
-   fail verification until a new keypair is generated. Not fixable without a
-   decision from the owner.
-2. **Avatar: an AppImage was built and inspected, but never launched.** The
-   package contents, identity, icon and desktop entry are verified; the app
-   has not been run, and no Windows or macOS artefact was produced.
-   **Dictate: still no installer at all**, since bundling requires the Rust
-   build below.
+1. **Dictate's updater public key is still upstream's.** Verified independently
+   by fetching `cjpais/Handy`'s own `tauri.conf.json`: the key is byte-identical
+   to ours. The matching private half belongs to upstream, so no release of ours
+   can be signed until a new keypair is generated. Owner's decision.
+2. **Only Linux artefacts were produced.** Avatar built an AppImage and an
+   unpacked build (both launched); Dictate built a `.deb` (binary run). No
+   Windows or macOS artefact exists, and neither GUI window has been driven
+   interactively.
 3. **Speech generation was never run.** The tests skip without a multi-GB model
    checkpoint and there is no GPU on this machine.
 4. **Canvas ran on CPU with no model weights.** Graph execution is proven;
    image generation is not.
-5. **Dictate's Rust crate is still not fully type-checked.** Every *system
-   dependency* blocker was solved rootless (pkg-config, GTK, WebKit, OpenSSL,
-   Vulkan, SPIRV-Headers, glslc, gtk-layer-shell), and compilation reached the
-   crate graph, but a full `cargo check` needs to compile `transcribe-cpp-sys`
-   (whisper.cpp + ggml + Vulkan shaders) and exceeded this machine's practical
-   budget — it produced 2.9 GB of artefacts on a 7.6 GB box before being
-   stopped deliberately to keep the machine usable. **This belongs in CI**, on
-   a runner with the system packages preinstalled, not on the dev laptop.
+5. ~~Dictate's Rust crate is not type-checked.~~ **Resolved.** Constraining the
+   build to `-j2` at `nice 15` kept peak memory near 2 GB: `cargo check` exits
+   0 and `cargo test --lib` passes 206 tests. See R12. CI remains the right
+   home for this, but it is no longer unverified.
 
 ## Reproducing the environment
 
