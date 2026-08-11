@@ -11,33 +11,8 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://arcma.dev/arcane</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://arcma.dev/arcane/agents</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://arcma.dev/arcane/dictate</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://arcma.dev/arcane/canvas</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://arcma.dev/arcane/speech</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://arcma.dev/arcane/avatar</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://arcma.dev/work/arccode-agent-harness</loc>
+    <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>

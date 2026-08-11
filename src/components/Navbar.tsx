@@ -7,7 +7,6 @@ import { scrollToId } from "../scrollTo";
 
 const links = [
   { label: "Work", href: "#work" },
-  { label: "Arcane", href: "/arcane" },
   { label: "Services", href: "#services" },
   { label: "Experience", href: "#experience" },
   { label: "Writing", href: "/writing" },

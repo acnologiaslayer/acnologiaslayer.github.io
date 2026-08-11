@@ -41,9 +41,42 @@ export type Project = {
   approach: string[];
   outcomes: string[];
   sections?: CaseStudySection[];
+  /** Public repository or live link, when the work is open to view. */
+  link?: { label: string; href: string };
 };
 
 export const projects: Project[] = [
+  {
+    slug: "arccode-agent-harness",
+    title: "arccode — Multi-Provider Agent Harness",
+    category: "AI / Developer Tooling",
+    year: "2026",
+    description:
+      "A command-line agent harness that routes each task to the model that fits it, scoring on complexity, cost, performance and intent rather than pinning the tool to a single provider.",
+    tags: ["Python", "LLMs", "CLI", "Agents"],
+    accent: "#6366F1",
+    role: "Engineering lead, sole author",
+    timeline: "2026",
+    link: {
+      label: "github.com/acnologiaslayer/arccode",
+      href: "https://github.com/acnologiaslayer/arccode",
+    },
+    summary:
+      "A terminal harness that treats model choice as a routing decision rather than a configuration constant, so provider churn stops being a migration.",
+    challenge:
+      "Every model provider is a moving target: pricing shifts, capabilities diverge, and a tool pinned to one of them ages badly. I wanted a workflow where the routing decision was explicit and reversible, and where long or branching work could be delegated without exhausting the parent context.",
+    approach: [
+      "Scored each task on complexity, cost, performance and intent, then dispatched to the provider matching that profile instead of a hardcoded default.",
+      "Built spawnable sub-agents so branching work runs in its own context and reports back.",
+      "Made capabilities file-based, so skills can be imported from other ecosystems or written at runtime without a release.",
+      "Kept the provider layer thin and swappable, which is what makes the routing decision reversible.",
+    ],
+    outcomes: [
+      "Runs against multiple providers from one interface, with per-task routing rather than a global model setting.",
+      "Provider durability became the design centre: a bug in one provider's token handling surfaced through the harness rather than through a user.",
+      "Skills and agents can be added without touching the core, keeping the extension path open.",
+    ],
+  },
   {
     slug: "ai-data-interpretation-platform",
     title: "AI Data-Interpretation Platform",

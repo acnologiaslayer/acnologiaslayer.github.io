@@ -153,6 +153,21 @@ export default function CaseStudy() {
                 </span>
               ))}
             </div>
+
+            {project.link ? (
+              <div className="mt-8">
+                <h2 className="font-mono text-xs uppercase tracking-widest text-muted">Source</h2>
+                <a
+                  href={project.link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-cursor="Open"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm text-fg underline decoration-border underline-offset-4 transition-colors hover:decoration-fg"
+                >
+                  {project.link.label} <IconArrowUpRight />
+                </a>
+              </div>
+            ) : null}
           </div>
 
           <div className="space-y-14">

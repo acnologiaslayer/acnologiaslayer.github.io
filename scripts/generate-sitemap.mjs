@@ -29,12 +29,6 @@ async function main() {
   const dataTs = await readFile(join(root, "src/data.ts"), "utf8");
   const projectSlugs = [...dataTs.matchAll(/slug:\s*"([a-z0-9-]+)"/g)].map((m) => m[1]);
 
-  // Arcane product slugs from products.ts
-  const productsTs = await readFile(join(root, "src/products.ts"), "utf8");
-  const productSlugs = [
-    ...productsTs.matchAll(/^\s{4}slug:\s*"([a-z0-9-]+)",/gm),
-  ].map((m) => m[1]);
-
   // Article slugs + dates from markdown
   const articlesDir = join(root, "src/content/articles");
   let articles = [];
@@ -53,12 +47,6 @@ async function main() {
   const urls = [
     { loc: `${BASE}/`, priority: "1.0", changefreq: "weekly" },
     { loc: `${BASE}/writing`, priority: "0.9", changefreq: "weekly" },
-    { loc: `${BASE}/arcane`, priority: "0.9", changefreq: "weekly" },
-    ...productSlugs.map((s) => ({
-      loc: `${BASE}/arcane/${s}`,
-      priority: "0.8",
-      changefreq: "monthly",
-    })),
     ...projectSlugs.map((s) => ({
       loc: `${BASE}/work/${s}`,
       priority: "0.8",
