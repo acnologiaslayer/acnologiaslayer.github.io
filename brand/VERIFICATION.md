@@ -329,6 +329,53 @@ upstream's public key and we hold no matching private key, so a release cannot
 be signed. Generating a keypair and replacing `plugins.updater.pubkey` is a
 prerequisite for shipping, and it is the owner's decision to make.
 
+## R13. Consolidated audit over the whole result (final sweep)
+
+Everything above was verified as it was built. This section re-verifies the
+finished result in one pass, from **freshly cloned remotes** rather than local
+working copies, so it reflects what is actually published.
+
+### Licensing, all four products — 25/25 obligations satisfied
+
+Each product was asserted against the obligations its upstream licence actually
+imposes, not merely that a licence file exists.
+
+| Product | Verified |
+|---|---|
+| Dictate | own licence proprietary; upstream MIT notice preserved verbatim; no stale open-source claim |
+| Speech | own licence proprietary; Apache text retained in full; NOTICE credits upstream; packaging ships all three files |
+| Avatar | own licence proprietary; upstream agreement retained; **MAU ceiling surfaced in our LICENSE**; required credit displayed |
+| Canvas | **still GPL-3.0 and not falsely marked proprietary**; §5(a) change notices; §5(d) interactive notice; route to source; licence exposed over the API |
+| All four | NOTICE.md present; our copyright asserted |
+
+Two of these were proven by **running the software**, not reading it:
+
+* The Speech **wheel** reports `License-Expression: LicenseRef-Proprietary` and
+  ships `LICENSE`, `LICENSE-APACHE-2.0-OmniVoice` and `NOTICE.md` — the
+  Apache-2.0 obligations hold in the artefact a user receives.
+* The Canvas **server**, booted from the clean clone, logs
+  `Free software under GPL-3.0, with ABSOLUTELY NO WARRANTY … source: …`,
+  returns `app_license: GPL-3.0-or-later` from `/api/system_stats`, serves
+  `<title>Arcane Canvas</title>`, and contains **zero** occurrences of the
+  upstream name in the served shell.
+
+### Arcane Dictate, whole-result sweep — 14/14 checks passed
+
+| Boundary | Result |
+|---|---|
+| Identity | productName, bundle identifier, crate and lib all ours; no stale `handy_app_lib` |
+| **IPC contract** | 113 commands invoked from the frontend, every one defined in Rust |
+| i18n | 24/24 locales key-identical to English, zero upstream naming, new name in every one |
+| Packaging | all bundle icons and the resources glob resolve |
+| **Library path** | the deb install path, the `build.rs` rpath and the CI assertions all agree, with no `/usr/lib/Handy` left |
+| Endpoints | updater points at our releases |
+
+### The test suite, re-run from the clean clone
+
+`cargo test --lib` → **206 passed, 0 failed, EXIT=0**, including all 7 migration
+tests and all 6 portable-mode tests. The full log is kept at
+`brand/audit/dictate-cargo-test.log`.
+
 ---
 
 ## Known gaps, stated honestly
