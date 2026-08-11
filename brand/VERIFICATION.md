@@ -244,6 +244,24 @@ owning the frontend, which is the same conclusion the licensing analysis reached
 | Old `import omnivoice` | correctly `ModuleNotFoundError` — no stale module shadowing |
 | Upstream HF model ids | 8 references preserved, `model_type="omnivoice"` intact, so downloads still resolve |
 
+## R11. Arcane Dictate integration boundaries
+
+The Rust crate cannot be compiled here, so its boundaries were checked where
+they are actually observable: the manifest, the IPC contract, and packaging.
+
+| Boundary | Check | Observed |
+|---|---|---|
+| Crate identity | `cargo metadata` | name `arcane-dictate`, lib `arcane_dictate_lib`, bin `arcane-dictate`, default-run set |
+| Rust internal refs | grep for the old lib name | none; `main.rs` and the audio CLI both call `arcane_dictate_lib` |
+| **Frontend ↔ Rust IPC** | every `TAURI_INVOKE` name vs every `#[tauri::command]` | **113 invoked, 113 defined, 0 missing** |
+| Tauri capabilities | window labels granted vs used at runtime | `main`, `recording_overlay` on both sides, none ungranted |
+| Bundle inputs | resources glob, all 5 icons, `frontendDist` | all resolve |
+| Portable-installer resolver | ran the test suite | passes, plus a new case using our repo slug and rebranded asset names |
+| Updater endpoint | HTTP probe | 404, correct: no release has been published yet |
+
+Remaining `handy` strings in the generated bindings are all the third-party
+`handy-keys` crate and the upstream model CDN, both deliberately preserved.
+
 ---
 
 ## Known gaps, stated honestly
