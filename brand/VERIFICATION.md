@@ -17,9 +17,10 @@ uneven by design of the environment, not by choice:
   was never type-checked and the desktop app was never launched.**
 
 Avatar has since been packaged **and launched**, which caught a crash on first
-run (see R10). Arcane Dictate remains the exception: it has never been built as
-a desktop app, because its Rust crate needs a whisper.cpp + Vulkan compile this
-machine cannot afford. That is now the single largest untested surface.
+run (see R10). Arcane Dictate has since been **compiled, packaged and run** as
+well (see R12): 206 crate tests pass, the `.deb` builds, and the binary loads
+its native backends from the renamed library directory. No end user has driven
+either GUI interactively, and no release has been signed.
 
 The environment needed to run these is reproducible: system libraries were
 installed rootless into `~/localdeps/root` (see `~/arcane-verify/rust-env.sh`),
@@ -261,6 +262,57 @@ they are actually observable: the manifest, the IPC contract, and packaging.
 
 Remaining `handy` strings in the generated bindings are all the third-party
 `handy-keys` crate and the upstream model CDN, both deliberately preserved.
+
+## R12. Arcane Dictate: the crate compiled, the app built, the binary ran
+
+The gap flagged in every earlier round is now closed. Constraining the build to
+`-j2` at `nice 15` kept peak memory around 2 GB, well inside this machine.
+
+| Check | Observed |
+|---|---|
+| `cargo check --lib` | **EXIT=0** in 11m57s. Two warnings, both pre-existing and unrelated to the rebrand |
+| `cargo test --lib` **in the real crate** | **206 passed, 0 failed** |
+| The migration tests, run from the shipping crate | all 7 pass, including `imports_a_realistic_upstream_install` |
+| The portable-mode tests | all 6 pass |
+| `tauri build --bundles deb` | binary and `.deb` produced; the run then stopped at signing (see below) |
+
+### The built package
+
+| Check | Observed |
+|---|---|
+| Binary | `arcane-dictate`, 46 MB ELF executable |
+| Package metadata | `Package: arcane-dictate`, `Maintainer: Mahir Musleh` |
+| Installed binary path | `/usr/bin/arcane-dictate` |
+| Icons | `usr/share/icons/hicolor/*/apps/arcane-dictate.png` |
+| Desktop entry | `Name=Arcane Dictate`, `Exec=arcane-dictate`, `Icon=arcane-dictate`, `StartupWMClass=arcane-dictate` — no unexpanded placeholders |
+| **The `/usr/lib` three-way contract** | binary `RUNPATH` is `$ORIGIN/../lib/arcane-dictate`, and the deb installs 18 `.so` files to `usr/lib/arcane-dictate`. **They match.** |
+
+### Running the built binary
+
+Launched from the extracted package under Xvfb:
+
+* `--help` prints **"Arcane Dictate - Speech to Text"**.
+* `--list-devices` initialises the native backend and logs
+  `transcribe_init_backends: ... after scanning /tmp/debx/usr/lib/arcane-dictate: CPU`,
+  loading `libggml-vulkan.so` and `libggml-cpu-alderlake.so` **from the renamed
+  directory**. This is the rename proven at runtime, not in configuration.
+* Log lines are emitted under the `arcane_dictate_lib` target.
+* `--list-models --json` returns **83 models**, with upstream HuggingFace repo
+  ids preserved so downloads still resolve.
+
+### One genuine blocker, now proven rather than predicted
+
+The bundle run ended with:
+
+```
+A public key has been found, but no private key.
+Make sure to set `TAURI_SIGNING_PRIVATE_KEY` environment variable.
+```
+
+This is the updater-key problem, confirmed empirically: the config still carries
+upstream's public key and we hold no matching private key, so a release cannot
+be signed. Generating a keypair and replacing `plugins.updater.pubkey` is a
+prerequisite for shipping, and it is the owner's decision to make.
 
 ---
 
