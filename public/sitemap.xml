@@ -61,6 +61,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://arcma.dev/writing/practical-insights-on-caching-layers-in-software-architecture</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://arcma.dev/writing/sql-vs-nosql-practical-choices-without-the-dogma</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
