@@ -16,9 +16,10 @@ uneven by design of the environment, not by choice:
 * **Arcane Dictate's** web bundle was built and audited, but **the Rust crate
   was never type-checked and the desktop app was never launched.**
 
-Avatar has since been packaged into a real AppImage and its contents verified
-(this caught a launcher-name defect). Neither desktop app has been *launched*,
-and Dictate still has no installer. That remains the largest untested surface.
+Avatar has since been packaged **and launched**, which caught a crash on first
+run (see R10). Arcane Dictate remains the exception: it has never been built as
+a desktop app, because its Rust crate needs a whisper.cpp + Vulkan compile this
+machine cannot afford. That is now the single largest untested surface.
 
 The environment needed to run these is reproducible: system libraries were
 installed rootless into `~/localdeps/root` (see `~/arcane-verify/rust-env.sh`),
@@ -203,6 +204,45 @@ installed.
    currently returns HTTP 200, but this is third-party infrastructure we do not
    control and it can disappear without notice. Mirroring these to our own
    storage is a prerequisite for treating Dictate as an independent product.
+
+## R10. End-user acceptance: the apps were actually launched
+
+Earlier rounds verified artefacts without ever running them. This round did.
+
+### Arcane Avatar — launched under Xvfb
+
+| Check | Observed |
+|---|---|
+| Packaged app launched | **crashed on first attempt**: `initDB` failed, "Could not locate the bindings file" |
+| Cause | packaging runs `npmRebuild: false`, so `better-sqlite3` was never built for this Electron ABI |
+| After `npx @electron/rebuild -f -w better-sqlite3` | app runs for the full session with no errors |
+| App data directory created by the running app | `~/.config/arcane-avatar/biz.db` — the rebranded identity holds end to end |
+| **Real upgrade test**: seeded `~/.config/HeyGem/biz.db` with a row, then launched the packaged app | migrated: `[('legacy-presenter-take',)]` readable under the new name, legacy directory retained |
+
+The rebuild requirement is now documented in the README and beside the setting.
+
+### Arcane Canvas — served UI loaded in a browser
+
+| Check | Observed |
+|---|---|
+| `GET /` | HTTP 200, `<title>Arcane Canvas</title>` |
+| Workflow of built-in nodes via `POST /api/prompt` | `status: success`, output `{"2": {"text": ["arcane canvas works"]}}` |
+| Full UI rendered in a headless browser | loads and paints: node graph, templates browser, run controls |
+| Upstream branding in the served shell | **defect found**: `Loading ComfyUI` on the boot screen |
+| After fix, re-verified on a running server | `Loading Arcane Canvas`, zero `ComfyUI` in the served HTML |
+
+Note the UI still carries the upstream logo in its top-left, because the
+frontend is a prebuilt upstream wheel we do not build. Replacing that requires
+owning the frontend, which is the same conclusion the licensing analysis reached.
+
+### Arcane Speech — package boundary
+
+| Check | Observed |
+|---|---|
+| Installed metadata | `arcane-speech 0.2.1`, `LicenseRef-Proprietary` |
+| All 4 console scripts registered and targeting `arcane_speech` | confirmed |
+| Old `import omnivoice` | correctly `ModuleNotFoundError` — no stale module shadowing |
+| Upstream HF model ids | 8 references preserved, `model_type="omnivoice"` intact, so downloads still resolve |
 
 ---
 
