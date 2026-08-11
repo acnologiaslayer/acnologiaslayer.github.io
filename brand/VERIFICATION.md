@@ -374,7 +374,7 @@ Two of these were proven by **running the software**, not reading it:
 
 `cargo test --lib` → **206 passed, 0 failed, EXIT=0**, including all 7 migration
 tests and all 6 portable-mode tests. The full log is kept at
-`brand/audit/dictate-cargo-test.log`.
+`brand/audit/dictate-cargo-test.txt`.
 
 ---
 
