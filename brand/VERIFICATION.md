@@ -300,6 +300,21 @@ Launched from the extracted package under Xvfb:
 * `--list-models --json` returns **83 models**, with upstream HuggingFace repo
   ids preserved so downloads still resolve.
 
+
+### What the GUI itself was, and was not, shown to do
+
+The Rust window builder sets `.title("Arcane Dictate")`, the built web bundle
+contains the product name, and the served `index.html` carries
+`<title>Arcane Dictate</title>`. Serving that bundle in a plain browser renders
+an **empty** `<div id="root">`, which is expected: the React app calls Tauri IPC
+that only exists inside the desktop shell, so a browser cannot stand in for it.
+
+**Nobody has driven the running GUI interactively.** Doing so needs a desktop
+session with a real user, or an automated Tauri WebDriver harness. The CLI
+surface of the same binary was exercised and is branded correctly, and the
+window title is set in code, but that is weaker evidence than a screenshot of
+the running window and should not be read as more.
+
 ### One genuine blocker, now proven rather than predicted
 
 The bundle run ended with:
