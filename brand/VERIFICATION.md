@@ -179,9 +179,18 @@ exercised individually.
 | Locale key sets vs English source | structurally identical, 0 missing/extra keys |
 | Locale strings naming the upstream product | **none** |
 | Locales carrying the new product name | 24/24 |
-| Migration module compiled and its 6 tests run (extracted to a standalone crate) | 6 passed |
-| Added test: realistic upstream install (real `default_settings.json`, a model blob, history) | passed: settings byte-identical, model and history preserved, marker written, legacy retained, idempotent on second run |
-| Portable-marker contract, 4 new tests | passed: an upstream-written marker is still recognised, whitespace tolerated, empty/foreign rejected, missing file does not panic |
+| Migration module compiled and its tests run | 7 passed |
+| Added test: realistic upstream install (settings, a model blob, history) | passed: settings byte-identical, model and history preserved, marker written, legacy retained, idempotent on second run |
+| Portable-marker contract | upstream's own tests already cover the magic string, empty file, wrong content and whitespace cases |
+
+**Caveat on how these were run.** The full `src-tauri` crate could not be
+compiled here: it builds whisper.cpp with Vulkan shaders and produced 2.9 GB of
+artefacts on a 7.6 GB machine before being stopped. The tests were therefore
+executed against the module extracted into a standalone crate. That proves the
+logic is correct, but **not** that it is wired into the shipping binary. The new
+test was written into `src-tauri/src/legacy_migration.rs` itself, so CI's
+existing `cargo test` job closes that gap on a runner with the system packages
+installed.
 | macOS autostart | removes both the current and the legacy `Handy.plist`, so an upgraded machine will not launch the app twice at login |
 | Updater endpoint | points at `acnologiaslayer/arcane-dictate` releases |
 
